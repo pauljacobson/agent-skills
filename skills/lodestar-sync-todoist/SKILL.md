@@ -29,11 +29,33 @@ For each project matching the **"Working on"** view in `Bases/Projects.base`
 (status active):
 
 1. Read the project note.
-2. Find the **first** unchecked `- [ ]` line in the `## Tasks` section.
-3. Compute a stable fingerprint: `sha256(project_filename + ":" + task_text)`,
+2. **Locate the real `## Tasks` section** — see "Finding the real Tasks
+   section" below. Some project notes (notably `Lodestar - building a
+   personal performance agent.md`) embed the bare project template inside a
+   fenced code block as documentation, which contains its own `## Tasks`
+   heading. The naive "first match" picks up the documentation copy and
+   syncs the placeholder `- [ ]` instead of the real tasks.
+3. Find the **first** unchecked `- [ ]` line in that section.
+4. Compute a stable fingerprint: `sha256(project_filename + ":" + task_text)`,
    first 12 hex chars.
-4. Check `~/Git/Projects/lodestar/todoist-sync/synced.jsonl` — skip if the
+5. Check `~/Git/Projects/lodestar/todoist-sync/synced.jsonl` — skip if the
    fingerprint already has an entry.
+
+#### Finding the real Tasks section
+
+Scan the file line by line, tracking whether you are inside a fenced code
+block (toggle a `in_fence` flag on every line that starts with three
+backticks). A `## Tasks` heading only counts when `in_fence` is false. Take
+the **last** such heading in the file as the real one — this is robust to
+both the embedded-template case and to future edits that prepend
+descriptive sections.
+
+If no real `## Tasks` heading is found (or the section is empty / contains
+only an empty placeholder `- [ ] ` with no text after the brackets), skip
+the project — there's nothing to sync.
+
+A placeholder `- [ ]` (with no text) should never be synced. If the first
+unchecked line is empty, treat the project as having no candidates.
 
 ### Step 2 — Present batch for confirmation
 
