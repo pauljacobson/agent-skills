@@ -144,8 +144,6 @@ These are offers, not automatic — Paul says yes or this is the end.
   filename and is hard to change after.
 - **Inbox writes only require confirmation of the line content**, not the
   whole file (since it's pure append).
-- **Always offer to clear the stale `due:` field** after QuickAdd creates a
-  new note. Default: clear.
 - **Don't fill in `status: inprogress` defensively.** A new opportunity
   isn't necessarily started. Blank is the safer default — only set if Paul
   says he's starting now.
