@@ -104,6 +104,56 @@ If the script's `partial_failures` is non-empty, surface a brief warning
 ("Note: N gh-inbox queries failed — sweep may be incomplete.") but
 continue.
 
+### Step 3.7 — Todoist Inbox sweep (process unprocessed items)
+
+The Todoist Inbox is the GTD "stuff pile" — where new tasks land before
+they're categorised. Paul typically won't have seen these unless he's been
+deliberate about processing the Inbox. Surface each item and walk through
+it consciously. **One at a time, not bulk** — bulk-processing defeats the
+inbox-zero purpose.
+
+Run `td inbox --json` (via the `todoist` skill). Sort by added-date,
+oldest first. Show the count and start the walk:
+
+> You have N tasks in your Todoist Inbox. Let's process them one at a
+> time, starting with the oldest.
+>
+> 1. "Email Brandon about v2 review" — added 8 days ago
+>    What's the next action: assign to a project, defer, delete, or
+>    leave?
+
+For each item, the four action paths:
+
+- **Assign to project** — ask which Todoist project (or which vault
+  project, if it should become a `- [ ]` line in a project note instead).
+  If a Todoist project, defer the move to the batched writes step. If a
+  vault project, defer to the batched writes (or suggest running
+  `/lodestar-capture-opportunity` after the review for a brand-new
+  project).
+- **Defer** — ask when (e.g. "next week", "2026-05-15"). Reschedule via
+  the todoist skill. Confirm: "Defer '...' to YYYY-MM-DD? [y/n]" before
+  the write.
+- **Delete** — explicit confirmation per item: "Delete '...' from Todoist?
+  [y/n]". Never bulk-delete. Use the todoist skill's delete operation
+  only after the user types yes.
+- **Leave** — skip; the task stays in Inbox for the next sweep. No-op.
+
+If there are 10+ Inbox items, offer: "That's a lot. Want to process the
+oldest 5 today and pick up the rest next week?" Don't push to clear
+everything in one session — that's the failure mode that makes people
+abandon the review.
+
+If Inbox is empty:
+
+> Todoist Inbox is empty. Nice work.
+
+**Inbox should not contain vault-synced tasks.** By policy,
+`lodestar-sync-todoist` writes to a dedicated project (e.g. "Lodestar"),
+never Inbox — see `config.md`. If you find vault-synced tasks here (e.g.
+their text matches the `<task> [<project name>]` format used by sync), do
+NOT auto-move them. Surface them and ask Paul: "These look like
+vault-synced tasks in Inbox — is your sync destination misconfigured?"
+
 ### Step 4 — Batched writes (with confirmation)
 
 After the pass, summarise pending writes as a single confirmation block:
