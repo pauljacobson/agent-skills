@@ -241,7 +241,7 @@ mutating Gmail tool from this skill.
 
 With inboxes clear, now look at calendar, projects, and waiting-for.
 
-### Step 4 — Calendar review (past + upcoming)
+### Step 5 — Calendar review (past + upcoming)
 
 Read directly from Paul's **Google Calendar connector** (MCP). Pull two
 windows:
