@@ -393,9 +393,9 @@ If yes, add to Todoist via the `todoist` skill (with confirmation per
 task). Add a `@top3` label or due-today flag if Paul has a convention.
 Otherwise, drop them in his preferred project (NOT Inbox).
 
-The Top 3 also get recorded in the session summary (Step 10).
+The Top 3 also get recorded in the session summary (Step 11).
 
-### Step 9 — Batched writes (with confirmation)
+### Step 10 — Batched writes (with confirmation)
 
 After all stages, summarise pending writes as a single confirmation
 block:
