@@ -320,7 +320,7 @@ For each project, in order:
 Keep each project under 90 seconds of conversation by default. If Paul
 wants to go deep on one, give him room — but don't solicit depth.
 
-### Step 6 — Waiting-For check
+### Step 7 — Waiting-For check
 
 Query the vault for projects with `status: pending` (use the **"Pending"**
 view in `Bases/Projects.base`).
