@@ -314,7 +314,7 @@ For each project, in order:
    - If next action is vague → ask for a concrete physical step
    - If waiting on someone → confirm pending status + capture who/what
 3. **Record decisions in memory** (don't write files yet — batch in
-   Step 9).
+   Step 10).
 4. **Move on.**
 
 Keep each project under 90 seconds of conversation by default. If Paul
