@@ -93,6 +93,12 @@ project tag makes it easy for Paul to spot vault-sourced tasks in Todoist.
 
 If Paul has a preferred Todoist project for vault-sourced tasks, ask once
 on first run and remember (record in `config.md` or a small state file).
+**The destination project must NOT be Inbox.** Inbox is reserved for
+unprocessed user inputs that `lodestar-weekly-review` will triage.
+Recommended default: a dedicated `Lodestar` project. If Paul says
+"Inbox" on first run, push back: "Inbox is reserved for unprocessed
+inputs in your weekly review — let's use a dedicated project like
+'Lodestar' instead so the two flows don't get tangled."
 
 ### Step 4 — Record sync state
 
