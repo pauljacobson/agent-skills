@@ -1,7 +1,8 @@
 ---
 name: lodestar-daily-check
 description: >
-  Brief weekday-morning check. Surfaces ONE thing worth attention today,
+  Brief workday-morning check (Paul's work week: Sun–Thu). Surfaces ONE
+  thing worth attention today,
   drawn from goals, in-flight projects, and the last few journal entries.
   Idempotent for the day — re-invoking shows the same surface, not a new one.
   Use when Paul says "daily check", "what should I focus on today", "lodestar
