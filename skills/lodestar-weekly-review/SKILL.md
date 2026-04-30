@@ -455,7 +455,7 @@ week in a row Goal 1 has been quiet; might be worth raising with
 Sarah").
 ```
 
-### Step 11 — Close the session
+### Step 12 — Close the session
 
 End with a one-line affirmation, calibrated to actual progress. The GTD
 note frames this well: "feel ready and clear for the upcoming week."
