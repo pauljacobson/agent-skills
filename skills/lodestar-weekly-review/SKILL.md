@@ -414,7 +414,7 @@ Proceed?
 Only write on explicit "yes" / "proceed" / equivalent. If Paul says no or
 modifies, redo the confirmation. **Never partial-write.**
 
-### Step 10 — Session summary
+### Step 11 — Session summary
 
 Write to `~/Git/Projects/lodestar/reviews/YYYY-MM-DD.md`:
 
