@@ -122,6 +122,20 @@ If Paul cut the review short:
 > We did 3 of 6. The remaining 3 are still in the queue for next time. No
 > guilt.
 
+## Finding the real Tasks section
+
+Some project notes embed the bare `_Templates/project_template.md` inside a
+fenced code block as documentation, so the file contains *two* `## Tasks`
+headings — one inside the fence (template doc) and one as the actual
+section. Naive "first match" picks the wrong one.
+
+Rule: scan line by line, toggle an `in_fence` flag on every line starting
+with three backticks, and only count `## Tasks` headings where `in_fence`
+is false. Take the **last** such heading as the real one.
+
+If no real `## Tasks` heading is found, treat the project as having no
+tasks — don't error.
+
 ## Rules
 
 - **Confirm before mutating any vault frontmatter.** Always batch.
