@@ -83,6 +83,14 @@ Append to `~/Git/Projects/lodestar/nudges/log.jsonl`:
 If Paul responds (in the same conversation) with "scheduled it" / "added to
 todoist" / etc., append a follow-up entry with `"action":"acted"`.
 
+### Step 5 — Self-perpetuating reminder (optional)
+
+After the run, check Todoist for an upcoming `Run /lodestar-daily-check in Claude` task scheduled for the next weekday. If none exists, offer:
+
+> Want me to add tomorrow's daily check to Todoist?
+
+If Paul says yes, create the task in Todoist with the appropriate due date. This keeps the reminder loop alive without him having to maintain it manually. Skip the offer if he's declined the same offer in the last 7 days (check `nudges/log.jsonl` for `"action":"declined-perpetuation"` entries).
+
 ## Rules
 
 - **One thing.** Not a list. Not a scorecard.
