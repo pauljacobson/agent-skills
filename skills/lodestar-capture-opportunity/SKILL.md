@@ -96,14 +96,9 @@ If yes, edit the file at `<vault>/<title>.md` to add the requested fields.
 Use `obsidian:obsidian-cli` or direct file write — but **always show the
 proposed edit and confirm before writing**.
 
-**Important — the stale-due bug:** the project template ships with
-`due: 2024-09-26`. After QuickAdd creates the note, lodestar should always
-ask:
-
-> The template has a stale due date (`2024-09-26`). Want to clear it, set
-> a real target, or leave it?
-
-Default: clear it. Don't propagate the bug.
+If Paul mentioned a target date when describing the opportunity, offer to
+set `due:` accordingly. Otherwise leave it blank — the user's template no
+longer carries a default due date, so blank is the correct empty state.
 
 ### Fallback — direct file write (only if QuickAdd fails)
 
