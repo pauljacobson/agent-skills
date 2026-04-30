@@ -96,6 +96,7 @@ items the user hasn't seen yet through their own `/gh-inbox` flow.
 One sentence. Not a nudge — a routing suggestion. Examples:
 - "Weekly review is overdue (last one was 11 days ago); consider /lodestar-weekly-review."
 - "Three new tasks in vault project notes haven't been pushed; consider /lodestar-sync-todoist."
+- "GitHub inbox last checked 6 days ago; consider /gh-inbox."
 - "Nothing pressing — good time for queue work."
 
 ## Rules
