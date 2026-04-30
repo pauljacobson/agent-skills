@@ -145,21 +145,51 @@ With inboxes clear, now look at calendar, projects, and waiting-for.
 
 ### Step 4 — Calendar review (past + upcoming)
 
-Lodestar does not auto-read your calendar. Prompt manually:
+Read directly from Paul's **Google Calendar connector** (MCP). Pull two
+windows:
 
-> Take a moment to scan your calendar. Two questions:
-> - **Past week**: any commitments you made that haven't been captured as
->   tasks? Anything you missed or want to follow up on?
-> - **Upcoming week**: anything significant — deadlines, meetings, blocks
->   of focus time — that should shape this week's priorities?
->
-> Anything to capture?
+1. **Past 7 days** — completed/past events. Surface anything that may have
+   created a commitment not yet captured (e.g. "Sarah suggested X in the
+   1:1 on Tuesday").
+2. **Upcoming 7 days** — scheduled events. Surface deadlines, meetings,
+   blocks of focus time that should shape this week's Top 3.
 
-Capture any items raised (defer the writes to Step 9 — batched writes).
+Use the calendar connector's `list_events` tool. Default to Paul's primary
+calendar; if he has multiple work calendars and an item should obviously
+come from a different one (e.g. an Automattic-specific calendar), pull
+that too. Use `list_calendars` once if you need to discover what's
+available.
 
-If a future calendar/MCP integration becomes available, this step can be
-upgraded to read directly. Until then, keep it as a deliberate human
-prompt.
+**Read-only**: do NOT create, modify, or delete events in this step.
+Calendar writes are out of scope for the weekly review.
+
+Surface a compact summary, not a wall of detail:
+
+```
+Past 7 days:
+- Mon — 1:1 with Sarah (1h)
+- Tue — Team meetup planning (45m)
+- Thu — Codex office hours (30m)
+
+Upcoming 7 days:
+- Tue 16:00 — 1:1 with Sarah
+- Wed all-day — Team workshop
+- Fri — Public holiday
+```
+
+Then prompt:
+
+> Anything from the past week that surfaced a commitment we haven't
+> captured yet?
+> Anything in the upcoming week that should shape this week's Top 3?
+
+Capture any items raised; defer writes to Step 9 (batched writes).
+
+**If the calendar connector is unavailable or errors:** fall back to a
+manual prompt — ask Paul to scan his own calendar and answer the same
+two questions. Note the failure briefly: "Couldn't reach the calendar
+connector — let's do this from your calendar app instead." Don't block
+the review on it.
 
 ### Step 5 — Per-project pass ("To review" projects)
 
