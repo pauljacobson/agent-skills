@@ -304,7 +304,9 @@ the rest later?"
 For each project, in order:
 
 1. **Read the project note** — show title, status, `reviewed:` date, and
-   the current top unchecked task in the project's `## Tasks` section.
+   the unchecked tasks in the project's `## Tasks` section (cap at 5
+   shown; mention if there are more). The vault is the project backlog,
+   so multiple open tasks is normal — that's not a problem.
    **Locate the section using the rule below**, not the naive "first
    match," so projects that embed the template inside a code fence
    (e.g. the lodestar project note) don't trip you up.
@@ -313,9 +315,19 @@ For each project, in order:
    - If untouched 4+ weeks → ask about shelved/someday_maybe
    - If next action is vague → ask for a concrete physical step
    - If waiting on someone → confirm pending status + capture who/what
-3. **Record decisions in memory** (don't write files yet — batch in
+3. **Identify the next action.** From the unchecked tasks shown, ask
+   Paul which (if any) is the **very next action** — the one that
+   should sit in front of him this week. Often this is the top task; it
+   doesn't have to be. Paul might also name a next action that isn't
+   in the vault yet — capture it as a new task.
+4. **Offer to promote the next action to Todoist.** "Want to push
+   '<task text>' to Todoist now?" If yes, ask which Todoist project
+   (don't default to Inbox). Defer the actual write to the batched
+   writes step (Step 10). If no, that's fine — it stays in the vault
+   backlog only.
+5. **Record decisions in memory** (don't write files yet — batch in
    Step 10).
-4. **Move on.**
+6. **Move on.**
 
 Keep each project under 90 seconds of conversation by default. If Paul
 wants to go deep on one, give him room — but don't solicit depth.
