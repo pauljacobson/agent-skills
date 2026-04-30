@@ -302,36 +302,69 @@ in `Bases/Projects.base` lines 25-48). Sort by `reviewed:` ascending
 If N > 8: "That's a lot. Want to do the most-overdue 4 today and pick up
 the rest later?"
 
-For each project, in order:
+**Flow modelled on OmniFocus's "Review" perspective**: one project at a
+time, full context visible, default closing action is "review and
+advance." The point is to remove clicks and decision overhead — Paul
+sees a project, makes 1-3 small decisions, hits "next."
 
-1. **Read the project note** — show title, status, `reviewed:` date, and
-   the unchecked tasks in the project's `## Tasks` section (cap at 5
-   shown; mention if there are more). The vault is the project backlog,
-   so multiple open tasks is normal — that's not a problem.
-   **Locate the section using the rule below**, not the naive "first
-   match," so projects that embed the template inside a code fence
-   (e.g. the lodestar project note) don't trip you up.
-2. **Apply 2-3 of the GTD prompts** from `weekly-review-procedure.md`,
-   choosing based on project state:
-   - If untouched 4+ weeks → ask about shelved/someday_maybe
-   - If next action is vague → ask for a concrete physical step
-   - If waiting on someone → confirm pending status + capture who/what
-3. **Identify the next action.** From the unchecked tasks shown, ask
-   Paul which (if any) is the **very next action** — the one that
-   should sit in front of him this week. Often this is the top task; it
-   doesn't have to be. Paul might also name a next action that isn't
-   in the vault yet — capture it as a new task.
-4. **Offer to promote the next action to Todoist.** "Want to push
-   '<task text>' to Todoist now?" If yes, ask which Todoist project
-   (don't default to Inbox). Defer the actual write to the batched
-   writes step (Step 10). If no, that's fine — it stays in the vault
-   backlog only.
-5. **Record decisions in memory** (don't write files yet — batch in
-   Step 10).
-6. **Move on.**
+For each project, in order, render a **compact card** in this shape:
 
-Keep each project under 90 seconds of conversation by default. If Paul
-wants to go deep on one, give him room — but don't solicit depth.
+```
+[3 of 8] — Block plugins workflow
+Status: inprogress  ·  Due: 2026-05-15  ·  Last reviewed: 2026-04-12 (18 days ago)
+
+Top tasks (3 of 7 unchecked):
+  • Email Brandon about v2 review timeline
+  • Test the localisation fix on staging
+  • Draft P2 post about the workflow
+
+Notes (last entry, truncated):
+  > Brandon happy with v1 output; v2 should narrow scope to migration cases…
+```
+
+Then ask **one consolidated GTD question** — pick 1-3 prompts based on
+project state, but ask them as a single block, not sequentially:
+
+> Quick check on Block plugins workflow:
+> - Still active, or shelf/someday?
+> - The top task ("Email Brandon...") — is that the very next action?
+> - Anything to capture or change?
+>
+> Or just say "next" to mark reviewed and move on.
+
+Default action is **"next"** = mark reviewed (today's date) and advance.
+That's the OmniFocus one-tap pattern: most projects don't need
+discussion, they just need a quick scan and a forward motion.
+
+Other concise responses to recognise:
+- `next` / `n` / `done` / `looks good` → mark reviewed, advance
+- `skip` / `s` → advance WITHOUT updating `reviewed:` (e.g. Paul wants
+  to come back to this one later)
+- `<free text>` → treat as notes/decisions; capture, then ask "anything
+  else, or next?"
+- `defer` → ask when, then advance without review-mark
+- `shelf` / `someday` → propose status change, advance
+
+Per-project rules of thumb:
+- If untouched 4+ weeks → suggest shelved/someday_maybe in the prompt
+- If the top task looks vague → flag it ("'Look into Brandon stuff' —
+  want a concrete next step?")
+- If pending status implies waiting on someone → confirm who/what
+
+If Paul wants to promote the next action to Todoist now, ask which
+Todoist project (never default to Inbox). Defer the actual write to the
+batched-writes step (Step 10).
+
+**Don't go deep by default.** 60-90 seconds per project is the target;
+if Paul wants to think out loud on one, give him room, but the prompt
+shape should make "next" feel as natural as "stop and discuss."
+
+**Record decisions in memory** (don't write to files yet — batch in
+Step 10).
+
+**Locate the `## Tasks` section using the rule below**, not the naive
+"first match," so projects that embed the template inside a code fence
+(e.g. the lodestar project note) don't trip you up.
 
 ### Step 7 — Waiting-For check
 
