@@ -376,7 +376,7 @@ If 0 Someday/Maybe projects and nothing new on Paul's mind, skip silently.
 
 ## Stage 4 — Wrap-Up
 
-### Step 8 — Top 3 next actions for the week ahead
+### Step 9 — Top 3 next actions for the week ahead
 
 This is the whole point — leaving the review with clarity on what to do
 next.
