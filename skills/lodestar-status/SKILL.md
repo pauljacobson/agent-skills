@@ -77,7 +77,21 @@ For each goal, count keyword matches in the last 7 days of journal entries
 as "Quiet for 7 days: Goal X". Don't generate a nudge here — that's
 `lodestar-goals-nudge`'s job. Just observe.
 
-### 6. Suggested next move
+### 6. GitHub inbox freshness
+
+Read `~/.claude/skills/gh-inbox/state.json` (if present) and report the age
+of `last_checked` in days. One line:
+
+```
+GitHub inbox: last checked N days ago.
+```
+
+If the file doesn't exist or is unparseable, write `GitHub inbox: not yet
+initialised.` and move on. **Never call `gh-inbox/scripts/fetch.sh` from
+this skill** — that script's default mode mutates state, and we'd consume
+items the user hasn't seen yet through their own `/gh-inbox` flow.
+
+### 7. Suggested next move
 
 One sentence. Not a nudge — a routing suggestion. Examples:
 - "Weekly review is overdue (last one was 11 days ago); consider /lodestar-weekly-review."
