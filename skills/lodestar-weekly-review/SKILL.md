@@ -137,6 +137,104 @@ suggest commitments not reflected in any project note: "I should...",
 > While reviewing journal entries, I noticed these don't appear in any
 > project: [list]. Want to add any?
 
+### Step 4 — Gmail sweep
+
+Paul's email is messy. The skill has two modes:
+
+#### First run — exploration
+
+If `~/Git/Projects/lodestar/references/gmail-rules.md` does not exist,
+enter **exploration mode** before doing any sweep. The point: figure out
+together what's worth surfacing in weekly reviews and what to ignore.
+Capture the decisions in `gmail-rules.md` so future reviews apply them
+automatically.
+
+Open with:
+
+> Your email is new territory for me. Let's spend a few minutes figuring
+> out what's worth surfacing in weekly reviews and what to ignore — your
+> email is messy enough that I shouldn't guess. I'll search a few
+> categories; we'll decide together what stays and what goes.
+
+Run a sequence of probe searches via the Gmail connector's
+`search_threads` (newest first, modest result count per probe):
+
+1. `is:unread newer_than:7d in:inbox` — unread last week
+2. `is:starred is:unread newer_than:30d` — starred-but-unhandled
+3. `(feedback OR review OR "pull request" OR PR) newer_than:7d in:inbox -from:noreply -from:no-reply` — likely action requests
+4. `to:paul.jacobson@a8c.com newer_than:7d -list:* -from:noreply` — direct mail (not list traffic)
+5. `subject:(invitation OR rescheduled OR canceled) newer_than:14d` — calendar churn (some overlaps with calendar but worth flagging)
+6. `category:promotions OR list:* newer_than:7d` — newsletters / list traffic (likely exclude)
+
+For each probe:
+- Show the count and 3-5 sample subject lines (sender + subject, no body
+  excerpts unless asked — keep things compact).
+- Ask: "Worth surfacing in future weekly reviews, or skip?"
+- For "worth surfacing": ask if there's a refinement (narrower query, time
+  window) that would make it more signal-heavy.
+- For "skip": confirm and move on.
+
+After the probes, propose a draft `gmail-rules.md` and confirm before
+writing:
+
+```markdown
+# Gmail rules for lodestar weekly review
+
+Captured during the first weekly review on YYYY-MM-DD. Edit by hand to
+refine over time.
+
+## Include — surface in weekly reviews
+
+### Direct PR/feedback requests
+- Query: `(feedback OR "pull request" OR PR) newer_than:7d in:inbox -from:noreply`
+- Why: real action items from people
+- Surface as: candidates for project tasks
+
+### Starred-but-unhandled
+- Query: `is:starred is:unread newer_than:30d`
+- Why: Paul flagged these as important but didn't act
+- Surface as: triage list
+
+## Exclude — never surface
+
+### Newsletters and list traffic
+- Query match: `category:promotions OR list:*`
+- Why: marketing/list noise; Paul ignores during reviews
+```
+
+Once written, proceed with the regular sweep using the new rules.
+
+#### Subsequent runs — apply rules
+
+If `gmail-rules.md` exists, read it. Run each "Include" query via
+`search_threads`. Surface results grouped by category, oldest-first per
+category:
+
+> Last 7 days from Gmail (3 categories, N total threads):
+>
+> **Direct PR/feedback requests** (4 threads)
+> 1. <sender> — <subject>
+> 2. ...
+>
+> **Starred-but-unhandled** (2 threads)
+> 1. ...
+
+For each thread Paul wants to act on, the same options as the GitHub
+sweep:
+- **Task in existing project** → defer to batched writes (Step 10).
+- **New opportunity** → suggest `/lodestar-capture-opportunity` after the
+  review.
+- **Reply now / draft now** → suggest doing it after the review (don't
+  draft mid-flow).
+- **Ignore / archive** → no-op; the email stays in Gmail. Lodestar does
+  not archive or delete email.
+
+If a category returns 0: write one line "No new threads in <category>"
+and move on.
+
+**Read-only**: do NOT use `create_draft`, `create_label`, or any other
+mutating Gmail tool from this skill.
+
 ---
 
 ## Stage 2 — Get Current
