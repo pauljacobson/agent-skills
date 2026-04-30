@@ -67,6 +67,43 @@ to...", "going to...", "Sarah suggested...". Surface 0-3 candidates:
 > While reviewing, I noticed these in your journal that don't appear in any
 > project: [list]. Want to add any?
 
+### Step 3.5 — GitHub inbox sweep
+
+Run `gh-inbox` in **non-mutating mode** so the user's own `/gh-inbox`
+triage state isn't consumed:
+
+```bash
+~/.claude/skills/gh-inbox/scripts/fetch.sh --since 7d
+```
+
+Parse the JSON. Group by category (Assigned / Body mentions / Comment
+mentions) and surface as candidates for vault project tasks or new
+opportunities:
+
+> Last 7 days from your GitHub inbox: 4 assignments, 6 mentions. Any of
+> these look like they should become a task in an existing project, or a
+> new opportunity to capture?
+>
+> 1. owner/repo#123 — Title — assigned to you
+> 2. owner/repo#456 — Title — comment mention
+> ...
+
+For each item the user wants to act on:
+- "task in existing project" → ask which project; queue an edit to add the
+  GitHub URL as a task line in that project's `## Tasks` section (defer to
+  the batched writes in Step 4).
+- "new opportunity" → suggest running `/lodestar-capture-opportunity` after
+  the review (don't trigger QuickAdd mid-review).
+- "ignore" → no-op; the item stays in the GitHub inbox for the user's
+  separate `/gh-inbox` flow.
+
+If gh-inbox returns 0 items in the window, output a single line:
+"GitHub inbox is quiet for the last 7 days." Move on.
+
+If the script's `partial_failures` is non-empty, surface a brief warning
+("Note: N gh-inbox queries failed — sweep may be incomplete.") but
+continue.
+
 ### Step 4 — Batched writes (with confirmation)
 
 After the pass, summarise pending writes as a single confirmation block:
