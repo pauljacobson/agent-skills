@@ -281,7 +281,7 @@ Then prompt:
 > captured yet?
 > Anything in the upcoming week that should shape this week's Top 3?
 
-Capture any items raised; defer writes to Step 9 (batched writes).
+Capture any items raised; defer writes to Step 10 (batched writes).
 
 **If the calendar connector is unavailable or errors:** fall back to a
 manual prompt — ask Paul to scan his own calendar and answer the same
