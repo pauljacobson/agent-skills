@@ -104,6 +104,10 @@ Append to `~/Git/Projects/lodestar/nudges/log.jsonl` as
 `lodestar-goals-nudge`. If Paul accepts the offer (e.g. "yes, add it"),
 update the entry with `"action":"acted"` after the action completes.
 
+### Step 7 — Self-perpetuating reminder (optional)
+
+Same pattern as `lodestar-daily-check`: after the run, check Todoist for the next scheduled `Run /lodestar-goals-nudge` task. If missing, offer to create it (default cadence: Tue/Thu 16:00). Skip the offer if recently declined.
+
 ## Rules
 
 - **One thing per invocation.** If two goals are equally quiet, pick one and
