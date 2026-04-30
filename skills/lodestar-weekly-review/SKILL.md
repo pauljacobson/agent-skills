@@ -289,7 +289,7 @@ two questions. Note the failure briefly: "Couldn't reach the calendar
 connector — let's do this from your calendar app instead." Don't block
 the review on it.
 
-### Step 5 — Per-project pass ("To review" projects)
+### Step 6 — Per-project pass ("To review" projects)
 
 Query the vault for projects matching the **"To review"** filter (defined
 in `Bases/Projects.base` lines 25-48). Sort by `reviewed:` ascending
