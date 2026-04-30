@@ -42,7 +42,10 @@ up the rest later?"
 For each project, in order:
 
 1. **Read the project note** — show the title, status, `reviewed:` date, and
-   the current top unchecked task in `## Tasks`.
+   the current top unchecked task in the project's `## Tasks` section.
+   **Locate the section using the rule below**, not the naive "first match,"
+   so projects that embed the template inside a code fence (e.g. the
+   lodestar project note itself) don't trip you up.
 2. **Apply 2-3 of the GTD prompts** from `weekly-review-procedure.md`,
    choosing based on the project's state:
    - If untouched 4+ weeks → ask about shelved/someday_maybe
