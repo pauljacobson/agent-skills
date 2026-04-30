@@ -10,7 +10,8 @@ description: >
   (with confirmation) and saves a session summary to
   ~/Git/Projects/lodestar/reviews/YYYY-MM-DD.md. Use when Paul says "weekly
   review", "GTD review", "let's review my projects", or runs
-  /lodestar-weekly-review. Typically Monday morning.
+  /lodestar-weekly-review. Typically Saturday morning (Paul's work week is
+  Sun–Thu; Saturday is the focused planning slot).
 ---
 
 # lodestar-weekly-review
