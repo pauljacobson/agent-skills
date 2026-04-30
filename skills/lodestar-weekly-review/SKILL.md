@@ -345,7 +345,7 @@ If 0 pending projects: skip silently. No pep talk required.
 
 ## Stage 3 — Get Creative
 
-### Step 7 — Someday/Maybe review
+### Step 8 — Someday/Maybe review
 
 Query the vault for projects with `status: someday_maybe` (use the
 **"Someday/Maybe"** view in `Bases/Projects.base`).
