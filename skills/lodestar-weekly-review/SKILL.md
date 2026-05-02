@@ -569,7 +569,133 @@ If any normalisations, repairs, or zombie-decisions happened, the
 session summary (Step 11) records them under "Frontmatter audit". If
 the audit was clean, the line is omitted from the summary.
 
+### Step 5c — Mode selection (when N > 8)
+
+Count items matching the **"To review"** filter (`Bases/Projects.base`
+lines 25-48). If `N ≤ 8`, skip this step — go straight to Step 6 in
+deep-dive mode (the card flow). If `N > 8`, present the three modes
+explicitly **before** any per-project work begins.
+
+The 60-90s-per-project budget for the card flow caps at ~8 projects in
+a 60-min slot; beyond that, scope has to be chosen consciously, not
+discovered mid-flow. The 2026-05-02 first-run review had 36 in queue
+and the triage/deep-dive split was decided mid-pass — that decision
+belongs at the top of Stage 2.
+
+#### Compute time estimates
+
+For the prompt below, compute estimates from N at runtime:
+
+- **Triage**: ~15 seconds per project. Round to nearest 5 min.
+- **Deep-dive**: ~75 seconds per project (midpoint of 60-90s budget).
+  Round to nearest 5 min.
+- **Triage-then-deep-dive**: triage time + deep-dive time on roughly
+  20-30% of N (calibrated from 2026-05-02: 36 → 6 active = 17%; for
+  better-maintained queues expect higher retention). Use **30%** as the
+  default deep-dive subset for the estimate; note in the prompt that
+  the actual subset depends on triage outcomes.
+
+#### Present the choice
+
+```
+N projects in "To review" — beyond the ~8 you can deep-dive in a
+60-90s-per-project budget. How do you want to scope today?
+
+A. Triage only (~<estimate> min)
+   Per project: keep / shelve / someday / pending / complete. No card,
+   no GTD prompts. Best when the queue's been ignored a long time and
+   most can be cleared with a quick judgement.
+
+B. Deep-dive only (~<estimate> min)
+   Full card per project with the GTD prompts. Best when you want to
+   think carefully about each one. Will run long if N is large.
+
+C. Triage then deep-dive (~<estimate> min — roughly <ceil(N×0.3)>
+   deep-dives after triage)
+   Triage all N first; deep-dive only what stays active. Best when you
+   suspect most can be cleared but want to think harder about the
+   active subset. (This is what worked on 2026-05-02 — 36 → 6 active.)
+
+Which?
+```
+
+Capture the choice as `stage2_mode` in working memory:
+
+- `triage_only` → Step 6 runs in triage form for all N, then jumps
+  past the deep-dive flow.
+- `deep_dive_only` → Step 6 runs the existing card flow for all N. If
+  Paul still wants to cap (e.g. "do the most-overdue 4"), offer that
+  *after* the mode is locked, not before.
+- `triage_then_deep_dive` → Step 6 runs triage form for all N first;
+  on completion, computes the still-active subset (status =
+  `inprogress` or empty after triage) and re-runs the card flow on
+  just those.
+
+#### Triage-form per-project flow
+
+Render a **minimal card** — title, status, last-reviewed date. No top
+tasks, no notes excerpt:
+
+```
+[3 of 36] — Block plugins workflow
+Status: inprogress  ·  Last reviewed: 2026-04-12 (18 days ago)
+
+Keep / shelve / someday / pending / complete?  (default: keep)
+```
+
+Recognised responses (case-insensitive, single-letter shortcuts):
+
+- empty / `k` / `keep` / Enter → no status change; mark reviewed; advance
+- `s` / `shelve` → status → `shelved`; mark reviewed; advance
+- `m` / `maybe` / `someday` → status → `someday_maybe`; mark reviewed; advance
+- `p` / `pending` → status → `pending`; mark reviewed; advance.
+  Optionally ask: *"What are you waiting on?"* — if Paul answers, capture
+  to the project's `## Notes` section (deferred to Step 10 batched writes).
+- `c` / `complete` → status → `completed`; mark reviewed; advance
+- `?` or any longer free text → **escape into deep-dive form for this
+  one project**. Render the full Step 6 card; complete the deep-dive flow
+  for it; then return to triage at the next item. This means triage mode
+  doesn't lock you in — if a project needs more thought, you dip into
+  the card just for that one without abandoning the run.
+
+The pace target is ~10-15 seconds per project. If Paul stalls on a
+single item, *don't prompt the GTD questions* — that's what the escape
+is for. Stay in triage until he uses it.
+
+All status changes from triage are deferred to Step 10 batched writes,
+same as the card flow. The session summary (Step 11) records the mode
+used and the triage outcomes (how many cleared, how many stayed
+active).
+
+#### Triage-then-deep-dive transition
+
+After the triage pass completes, before the deep-dive pass starts,
+surface a one-line summary:
+
+> Triage complete: 36 → 8 still active (3 shelved, 18 someday, 7
+> completed). Now deep-diving the 8.
+
+Then proceed to Step 6's card flow on the 8.
+
+If the still-active subset is 0 (everything cleared), output:
+
+> Triage complete: nothing left active. Skipping deep-dive.
+
+…and proceed to Step 7.
+
 ### Step 6 — Per-project pass ("To review" projects)
+
+This step runs in one of two forms based on `stage2_mode` set in Step 5c:
+
+- **Triage form** — see Step 5c. Skip the card-flow detail below.
+- **Deep-dive form** (default when N ≤ 8 or `stage2_mode = deep_dive_only`,
+  and the deep-dive portion of `triage_then_deep_dive`) — the card flow
+  documented below.
+
+For triage-then-deep-dive, when this step runs, it operates on the
+post-triage active subset, not the original N.
+
+#### Deep-dive form
 
 Query the vault for projects matching the **"To review"** filter (defined
 in `Bases/Projects.base` lines 25-48). Sort by `reviewed:` ascending
@@ -578,8 +704,10 @@ in `Bases/Projects.base` lines 25-48). Sort by `reviewed:` ascending
 > N projects need review, sorted by oldest review first. Most-overdue is
 > "X" (last reviewed YYYY-MM-DD). Let's start there.
 
-If N > 8: "That's a lot. Want to do the most-overdue 4 today and pick up
-the rest later?"
+(The "N > 8 — that's a lot, do the most-overdue 4?" prompt is no longer
+needed here — Step 5c handles upfront mode selection. If Paul is in
+deep-dive mode and *still* wants a cap mid-flow, he can say so and the
+remaining will defer to a future review.)
 
 **Flow modelled on OmniFocus's "Review" perspective**: one project at a
 time, full context visible, default closing action is "review and
