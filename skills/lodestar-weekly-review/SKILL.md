@@ -1060,7 +1060,11 @@ YAML repairs, N zombie decisions
 **"To review" queue**: empty ✓  *or*  N remaining (reasons: <reasons>)
 
 #### Top 3 for the week ahead
-1. ...
+Each item: title — destination (Todoist project / vault project / both).
+Joint-area items list constituents inline.
+
+1. <title> — <destination>
+   *(if joint-area: constituents: <issues / project notes / task lines>)*
 2. ...
 3. ...
 
