@@ -1153,6 +1153,35 @@ Step 12.
 
 ### Step 12 — Close the session
 
+#### Skill-spec issue offer
+
+If Step 11's Format learnings captured **candidate-issues** (entries
+in "What needs to change" that look like concrete skill-spec changes),
+offer to create GitHub issues for them before the close affirmation:
+
+> Two skill-spec items came up:
+>   1. "Stage 0 should also probe Performance Highlights notes"
+>   2. "Triage form needs a 'why' field for `pending` status changes"
+>
+> Want me to open lodestar issues for these?
+
+If yes:
+- For each candidate, draft a title and body using the standard
+  weekly-review issue shape (What / Why / Spec / Related — referencing
+  this review's session summary).
+- Show all drafts together, ask once for confirmation, then create
+  via `gh issue create --repo pauljacobson/lodestar` with appropriate
+  labels (`enhancement`, `weekly-review`).
+- Confirm with issue numbers/URLs after creation.
+
+If no, leave the candidate-issues only in the session summary — Paul
+can act on them later.
+
+This is opt-in only — never auto-create issues. Format learnings is
+descriptive; turning learnings into issues is a separate decision.
+
+#### Close affirmation
+
 End with a one-line affirmation, calibrated to actual progress. The GTD
 note frames this well: "feel ready and clear for the upcoming week."
 
