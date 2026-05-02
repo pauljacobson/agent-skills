@@ -867,6 +867,112 @@ Proceed?
 Only write on explicit "yes" / "proceed" / equivalent. If Paul says no or
 modifies, redo the confirmation. **Never partial-write.**
 
+### Step 10b — "To review" invariant check
+
+After batched writes commit, re-query the **"To review"** filter (same
+filter Step 6 used; defined in `Bases/Projects.base` lines 25-48).
+**The invariant**: a completed weekly review leaves "To review" empty.
+This step verifies the invariant before the session summary records
+results.
+
+In the 2026-05-02 first-run review, 5 projects remained in "To review"
+after the entire flow finished — discovered only as a follow-up
+question. The skill should catch this before Step 12.
+
+#### Probe
+
+Re-run the "To review" filter against the vault. Capture:
+
+- `to_review_remaining` — count of items still matching
+- For each remaining item, attempt to detect the cause (best-effort —
+  these are heuristics, not certainties):
+  - **Non-canonical status** — Step 5b audit either wasn't run or Paul
+    declined the mapping; the project's status still doesn't match the
+    canonical list.
+  - **Empty `reviewed:`** — a Stage 2 write didn't land. Possible
+    reasons: malformed YAML still present, the property write returned
+    an error that wasn't caught, the project was added to the queue
+    *after* the per-project pass started.
+  - **New project** — note's `created` (filesystem mtime or frontmatter
+    `created:` if present) is during today's session window. Likely
+    captured via `lodestar-capture-opportunity` or manually in Obsidian
+    while the review was running.
+  - **Cause unclear** — none of the above heuristics fit; flag and
+    surface anyway.
+
+#### If invariant holds (count = 0)
+
+Capture `to_review_invariant_held = True` in working memory. Proceed
+silently to Step 11. The session summary records "To review queue:
+empty ✓" on a single line.
+
+#### If invariant doesn't hold (count > 0)
+
+Surface the remaining items with the detected cause:
+
+```
+"To review" still has 5 items after batched writes:
+
+Likely cause: empty reviewed:
+  • Personal Diabetes Web App — reviewed write didn't land (YAML still
+    has malformed `reviewed:` after Step 5b repair was declined)
+  • Lead 1 on 1 preparation workflow — same shape
+
+Likely cause: new project (added during this session)
+  • Dotcom Bug Blitz — note created today at 10:42
+
+Likely cause: non-canonical status
+  • Hebrew Calendar plugin — status `paused` (declined mapping in
+    Step 5b)
+
+Cause unclear:
+  • Improve my GTD-productivity process — has reviewed: 2026-05-02 but
+    still matches the filter
+
+Process these now as a final batch (triage form), or leave for next
+review?
+```
+
+For each branch:
+
+- **"process now" / "yes" / "do them"** → run the triage form (Step 5c)
+  on the remaining items. After Paul makes status decisions, treat
+  those as a fresh round of pending writes — return to Step 10 for a
+  batched-writes confirmation, then re-enter Step 10b at the top.
+
+- **"leave for next review" / "skip" / "no"** → capture
+  `to_review_invariant_held = False` with the count and reasons.
+  Proceed to Step 11. The session summary records the residual count
+  and the reasons.
+
+- **Per-item disposition** (e.g. "process these 3, leave 2") → run
+  triage on the 3, leave the 2; capture both outcomes.
+
+#### Loop guard
+
+If Step 10b runs more than **twice in a single session** and the
+invariant still doesn't hold, stop looping. Surface:
+
+> The invariant didn't hold after retry — N items still in queue.
+> Possible causes: a malformed YAML write that's failing silently, or a
+> filter condition that's tripping after each write. Leaving these for
+> next review; the session summary will note the issue.
+
+…and proceed to Step 11. This prevents an infinite loop on edge cases
+where a write keeps failing for a reason the skill can't auto-resolve
+(e.g. an Obsidian sync conflict mid-session).
+
+#### Cross-references
+
+- The **non-canonical-status** branch is connected to Step 5b
+  (Frontmatter audit). If items are showing up here with non-canonical
+  statuses that *weren't* surfaced in Step 5b, that's a Step 5b bug —
+  log it as a "Lodestar's note" in the session summary.
+- The **new project** branch is the cleanest case: a project created
+  mid-session is legitimately *not* part of today's review. Default
+  disposition for new projects is "leave for next review" unless Paul
+  wants to triage them now.
+
 ### Step 11 — Session summary
 
 Write to `~/Git/Projects/lodestar/reviews/YYYY-MM-DD.md`:
