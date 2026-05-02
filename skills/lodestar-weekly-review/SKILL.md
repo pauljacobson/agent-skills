@@ -988,6 +988,7 @@ commitments captured (Stage 1)
 not authenticated), Gmail (no rules file yet)
 **Frontmatter audit** (omit line if clean): N statuses normalised, N
 YAML repairs, N zombie decisions
+**"To review" queue**: empty ✓  *or*  N remaining (reasons: <reasons>)
 
 #### Top 3 for the week ahead
 1. ...
