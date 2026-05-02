@@ -874,7 +874,8 @@ Write to `~/Git/Projects/lodestar/reviews/YYYY-MM-DD.md`:
 ```markdown
 ### Weekly review — YYYY-MM-DD
 
-**Reviewed**: N projects (Stage 2)
+**Reviewed**: N projects (Stage 2). Mode: <triage-only / deep-dive /
+triage-then-deep-dive: M triaged → K deep-dived>
 **Inbox processing**: Todoist N → 0/M, GitHub N items, journal N
 commitments captured (Stage 1)
 **Sources skipped this session** (omit line if none): GitHub inbox (gh
