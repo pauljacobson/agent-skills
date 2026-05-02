@@ -834,19 +834,88 @@ If 0 Someday/Maybe projects and nothing new on Paul's mind, skip silently.
 This is the whole point — leaving the review with clarity on what to do
 next.
 
-> Given everything we've just looked at: what are your **Top 3 next
-> actions** for this week? Not goals, not areas — concrete physical
-> next steps that, if done, would make this week feel productive.
+#### Two forms recognised
 
-Capture them. Offer:
+A Top 3 slot is allowed to be **either**:
 
-> Want me to push these to the top of your Todoist for this week?
+1. **A discrete physical task** — one specific next action ("Send blood
+   test results to Dr Perl"). The classic Top 3 shape.
+2. **A joint area priority** — one slot covering multiple issues or
+   tasks under one focus area, typically tracked across one or more
+   vault project notes ("Lodestar work — issues #2, #7, #8 + capture
+   Dotcom Bug Blitz"). The 2026-05-02 retro showed this form is real
+   and useful — sometimes the Top-3 priority is "make progress on this
+   focus area" rather than a single physical task.
 
-If yes, add to Todoist via the `todoist` skill (with confirmation per
-task). Add a `@top3` label or due-today flag if Paul has a convention.
-Otherwise, drop them in his preferred project (NOT Inbox).
+The prompt explicitly invites both:
 
-The Top 3 also get recorded in the session summary (Step 11).
+> Given everything we've just looked at: what are your **Top 3
+> priorities** for this week? Each can be either a single physical
+> next action, or a joint area priority covering multiple issues under
+> one focus.
+
+For joint-area items, ask Paul to name the area and list the
+constituent issues / tasks / project notes:
+
+> "Lodestar work" — what's covered? (e.g. specific issues, project
+> notes, or task lines)
+
+Capture both shapes uniformly: each Top 3 entry has a title and an
+optional list of constituents.
+
+#### Per-item destination
+
+For **each** of the 3 items, ask the destination separately — these
+choices vary item-by-item:
+
+> "Send blood test results to Dr Perl" — push to Todoist (which
+> project?) or track in a vault project note?
+
+Three destinations:
+
+- **Todoist** — Paul names the destination project (per `config.md` §
+  Todoist: never Inbox; never default; the choice depends on work area).
+  Add a `@top3` label or due-today flag if Paul has a convention.
+  Defer the actual write to Step 10 batched writes.
+
+- **Vault project note** — when the work is already tracked in a vault
+  project note + GitHub issues and Paul will action it via Claude Code
+  or directly in Obsidian, no Todoist mirror is needed. This is the
+  natural form for joint-area priorities, but a discrete task can also
+  go here if Paul prefers.
+
+  For this destination:
+  1. Confirm the destination project note exists (read its title).
+  2. For joint-area items, list the constituent issues/tasks Paul
+     named. Check whether each is already represented in the project
+     note's `## Tasks` section. For any that aren't, offer to add them
+     as `- [ ]` entries (deferred to Step 10 batched writes).
+  3. For discrete tasks going vault-only: same — confirm the line is
+     in `## Tasks` or offer to add it.
+  4. **No Todoist write.** Do not duplicate; the vault is the canonical
+     record for these.
+
+- **Both** — track in vault *and* push a single representative line to
+  Todoist (e.g. for joint-area items, push the area title only as a
+  visibility nudge; the constituents stay in the vault). Use sparingly
+  — duplication is the Todoist anti-pattern lodestar exists to avoid.
+  Confirm explicitly: *"Push 'Lodestar work' as a single Todoist line
+  for visibility, with constituents tracked in the vault?"*
+
+#### Defaults and prompts
+
+- **Default destination is "ask"** — don't auto-push. The 2026-05-02
+  retro found the auto-push prompt clumsy when the natural answer was
+  vault-only.
+- **Discrete physical tasks** lean toward Todoist (matches the
+  next-action ergonomics).
+- **Joint area priorities** lean toward vault-only (the issues are
+  already tracked there; mirroring would create the parallel-list
+  problem `lodestar-sync-todoist` is designed to avoid).
+- **Don't pre-decide.** Ask per item, even when the lean is obvious.
+
+The Top 3 get recorded in the session summary (Step 11) showing both
+title and destination per item.
 
 ### Step 10 — Batched writes (with confirmation)
 
