@@ -72,10 +72,22 @@ on one line: `YYYY-MM-DD — goal — first 80 chars of message`. If empty, writ
 
 ### 5. Quiet goals
 
-For each goal, count keyword matches in the last 7 days of journal entries
-(use `goal-mapping.md` for keyword sets). If any goal has 0 matches, list it
-as "Quiet for 7 days: Goal X". Don't generate a nudge here — that's
-`lodestar-goals-nudge`'s job. Just observe.
+**PTO short-circuit** — first probe journal recency per
+`~/Git/Projects/lodestar/references/pto-detection.md`. If there are zero
+`journal`-tagged notes in the last 5 calendar days, set `pto_mode = True`
+and output a single neutral line instead of per-goal observations:
+
+```
+Quiet goals: skipped — no journal entries in N days.
+```
+
+Skip the per-goal scan and proceed to section 6. Hold `pto_mode` for
+section 7.
+
+If `pto_mode = False`: for each goal, count keyword matches in the last 7
+days of journal entries (use `goal-mapping.md` for keyword sets). If any
+goal has 0 matches, list it as "Quiet for 7 days: Goal X". Don't generate
+a nudge here — that's `lodestar-goals-nudge`'s job. Just observe.
 
 ### 6. GitHub inbox freshness
 
