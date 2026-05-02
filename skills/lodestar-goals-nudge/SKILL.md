@@ -23,6 +23,20 @@ arc?"
 
 ## Procedure
 
+### Step 0 — PTO check
+
+Before reading goals, probe journal recency. Per
+`~/Git/Projects/lodestar/references/pto-detection.md`: if there are **zero
+`journal`-tagged notes in the last 5 calendar days**, set `pto_mode = True`,
+output the one-liner:
+
+> No journal entries in N days — looks like PTO. Nothing to flag.
+
+…and **end the turn**. Do NOT log a `surfaced` entry to `nudges/log.jsonl`
+(PTO mode is silent so the dedup window doesn't get polluted).
+
+If `pto_mode = False`, proceed to Step 1.
+
 ### Step 1 — Read goals
 
 Read `lead-calls-prep/references/goals.md`. Extract:
