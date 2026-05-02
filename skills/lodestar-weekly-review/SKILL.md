@@ -53,6 +53,129 @@ Get Creative can be deferred.
 
 ---
 
+## Stage 0 — Preflight
+
+A ~30-second pass before Stage 1 to probe every external source the review
+depends on, surface their availability up front, and let Paul opt
+in/out per source. The point: avoid mid-review surprises like "gh isn't
+authenticated" (silent zero-result Stage 1 sweep) or "no `gmail-rules.md`
+yet" (unexpected 30-minute exploration sub-flow at Step 4).
+
+This stage was added after the 2026-05-02 first-run review, where both
+problems above hit mid-Stage-1. See that review's session summary in
+`~/Git/Projects/lodestar/reviews/2026-05-02.md`.
+
+### Step 0 — Probe each source
+
+Fire these probes **in parallel** — most are cheap, and the slow ones
+(MCP connector pings) overlap fine:
+
+| Source | Probe | Green | Yellow | Red |
+|---|---|---|---|---|
+| Obsidian vault | check `config.md` vault root path exists | path exists | — | path missing |
+| Todoist | `td --version` (or first `td inbox --json` line) | command succeeds | — | command fails or auth error |
+| Journal | count of `journal`-tagged notes in last 7 days via obsidian-cli | ≥1 entry | 0 entries (vacation? PTO?) | obsidian-cli error |
+| GitHub inbox | `gh auth status` and existence of `~/.claude/skills/gh-inbox/scripts/fetch.sh` | both succeed | script missing but `gh` ok | `gh auth` not authenticated |
+| Gmail | `~/Git/Projects/lodestar/references/gmail-rules.md` exists AND Gmail connector reachable (`list_labels` returns) | both true | rules missing (exploration mode would fire) OR connector ok but no rules | connector unreachable |
+| Calendar | Calendar connector `list_calendars` returns | succeeds; primary calendar present | succeeds but multiple calendars (need scope choice) | connector unreachable |
+| Performance Highlights | list `Notes Hub/knowledgemattic/* Performance Highlights.md`, sort desc | most recent within 14 days | most recent older than 14 days OR none yet | obsidian-cli error |
+
+Don't fail the review on any individual probe error — the worst probe
+case is "skip this source today," not "abort everything."
+
+### Step 1 — Report and choose
+
+Render a compact table with one line per source. Use `✓` / `⚠` / `✗`
+markers (no emoji elsewhere in the review, but the preflight is the
+exception — the markers carry useful information at a glance). Example:
+
+```
+### Preflight — sources
+✓ Obsidian vault       — Notes Hub reachable
+✓ Todoist              — `td` authenticated, 2 in Inbox
+✓ Journal              — 8 entries in last 7 days
+✗ GitHub inbox         — `gh` not authenticated; Stage 1 Step 2 will return 0
+⚠ Gmail                — no gmail-rules.md yet; exploration mode would fire (~30 min)
+⚠ Calendar             — connector ok; 4 calendars detected (need scope)
+- Performance Highlights — none yet (expected; workflow hasn't run)
+
+Two yellow, one red. For each non-green source, choose: skip / fix / abort.
+```
+
+Then prompt **once per non-green source**, in this order: red sources
+first (they're most likely to derail something), then yellow:
+
+> **GitHub inbox** — `gh` not authenticated. Options:
+> - **skip** — bypass Stage 1 Step 2 today; the session summary will
+>   record this as "GitHub sweep skipped (gh not authenticated)"
+> - **fix** — pause here while you run `gh auth login`; resume when ready
+> - **abort** — bail on the whole review
+
+Capture Paul's choice. Hold it in working memory (the conversation) as a
+**skip flag** keyed by source name, e.g.:
+
+```
+preflight_skip = {
+  "github_inbox": True,
+  "gmail": True,
+  "calendar": False,  # not skipped, but with a scope choice
+}
+preflight_calendar_scope = ["primary"]  # or ["primary", "Automattic"]
+```
+
+For Calendar specifically, when the probe returns multiple calendars:
+
+> **Calendar** — 4 calendars detected: primary, Automattic, Family,
+> Public Holidays. Default for the review is primary. Want to include
+> any of the others?
+
+Default to primary if Paul says no/skip; otherwise add to
+`preflight_calendar_scope`. This replaces the "ask once" mid-Stage-2
+calendar-scope question described in `config.md` § Google Calendar.
+
+### Step 2 — Confirm and start
+
+After all non-green sources have a choice, summarise once:
+
+```
+Starting the review with:
+- Todoist, Journal, Calendar (primary + Automattic), Performance
+  Highlights
+- Skipping: GitHub inbox, Gmail
+```
+
+Then proceed to Stage 1.
+
+### Honoring skip flags downstream
+
+Each Stage 1+ source-step opens with a check:
+
+```
+If preflight_skip[<source>] is True:
+  silently skip; move to the next step. Do NOT print "skipping..." —
+  that creates noise. The omission is recorded in Step 11 (Session
+  summary) under "Sources skipped this session."
+```
+
+Specifically:
+- **Stage 1 Step 2 (GitHub inbox)** — if `github_inbox` skipped, omit.
+- **Stage 1 Step 4 (Gmail)** — if `gmail` skipped, omit.
+- **Stage 2 Step 5 (Calendar)** — if `calendar` skipped, omit; otherwise
+  use `preflight_calendar_scope` to drive `list_events` calls.
+
+Stages 1 Step 1 (Todoist), Step 3 (Journal), and all Stage 2+ vault-only
+steps don't need skip flags — those sources are local and reliable.
+
+### Skip-aware Step 11
+
+The session summary written to
+`~/Git/Projects/lodestar/reviews/YYYY-MM-DD.md` should include a brief
+**"Sources skipped this session"** line if any skips occurred, naming
+each skipped source and the reason captured during preflight. This makes
+the review log honest about scope.
+
+---
+
 ## Stage 1 — Get Clear
 
 Process every inbox before assessing projects. The point: when you review
