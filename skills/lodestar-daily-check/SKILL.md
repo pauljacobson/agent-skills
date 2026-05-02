@@ -29,6 +29,21 @@ produce a different "thing of the day."
 
 ## Procedure
 
+### Step 0 — PTO check
+
+Before gathering any signal, probe journal recency. Per
+`~/Git/Projects/lodestar/references/pto-detection.md`: if there are **zero
+`journal`-tagged notes in the last 5 calendar days**, set `pto_mode = True`,
+output the one-liner:
+
+> No journal entries in N days — assuming you're off; nothing to surface today.
+
+…and **end the turn**. Do NOT log a `surfaced` entry to `nudges/log.jsonl`
+(PTO mode is silent in the log to keep dedup windows clean and to avoid
+implying the skill acted).
+
+If `pto_mode = False`, proceed to Step 1.
+
 ### Step 1 — Gather signal
 
 In parallel:
