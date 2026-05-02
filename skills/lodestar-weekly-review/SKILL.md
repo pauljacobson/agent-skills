@@ -593,6 +593,8 @@ Write to `~/Git/Projects/lodestar/reviews/YYYY-MM-DD.md`:
 **Reviewed**: N projects (Stage 2)
 **Inbox processing**: Todoist N → 0/M, GitHub N items, journal N
 commitments captured (Stage 1)
+**Sources skipped this session** (omit line if none): GitHub inbox (gh
+not authenticated), Gmail (no rules file yet)
 
 #### Top 3 for the week ahead
 1. ...
