@@ -1108,7 +1108,48 @@ Lookup procedure:
 Optional: any meta-observation worth Paul seeing later (e.g. "third
 week in a row Goal 1 has been quiet; might be worth raising with
 Sarah").
+
+#### Format learnings
+Meta-observations about how the **review itself** went, separate from
+per-project decisions. Three sub-sections; omit any that produced
+nothing:
+
+##### What worked
+- (e.g. "Triage-then-deep-dive cleared 30 in 25 min where deep-dive
+  alone would have taken 90 min")
+
+##### What needs to change
+- (e.g. "Stage 0 preflight should also probe the Performance Highlights
+  notes — got caught off guard when none existed")
+
+##### What surprised me
+- (e.g. "Didn't expect 21 of 89 projects to use non-canonical statuses;
+  that's a 24% drift rate")
 ```
+
+#### Prompting for learnings
+
+After drafting the rest of the summary, but before writing the file,
+explicitly prompt Paul:
+
+> Format learnings — anything worth flagging about how this review
+> itself went?
+> - What worked?
+> - What needs to change about the skill?
+> - What surprised you?
+>
+> Skip any that didn't produce something specific.
+
+If Paul has examples from prior reviews to draw on, surface 1-2 from
+recent `reviews/*.md` files as a kickstart — but only if the prior
+review actually had a Format learnings section. Don't fabricate
+examples; the section is descriptive, not aspirational.
+
+If Paul writes "What needs to change" entries that look like concrete
+**skill-spec changes** (mention specific Steps, name a behaviour that
+should be different, suggest a new probe / step / handler), capture
+them in working memory as **candidate-issues**. They get acted on in
+Step 12.
 
 ### Step 12 — Close the session
 
