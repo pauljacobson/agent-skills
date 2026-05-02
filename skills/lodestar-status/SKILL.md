@@ -111,6 +111,17 @@ One sentence. Not a nudge — a routing suggestion. Examples:
 - "GitHub inbox last checked 6 days ago; consider /gh-inbox."
 - "Nothing pressing — good time for queue work."
 
+**If `pto_mode = True`**, suppress quiet-goal-driven suggestions. If the
+only candidate move would have been goal-related, output:
+
+```
+No routing suggestion — looks like PTO.
+```
+
+Other categories of suggestion (overdue weekly review, gh-inbox freshness,
+unsynced tasks) still apply if they fire — those are independent of journal
+activity.
+
 ## Rules
 
 - **Never write anything.** No nudge log entries. No frontmatter changes. No
