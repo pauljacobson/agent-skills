@@ -129,16 +129,21 @@ Final confirmation:
 ```
 About to add to Todoist:
   Project: <todoist project>
-  Task: "Email Brandon about v2 review timeline"
-  Source: Block plugins workflow.md (vault)
+  Label:   Next_Actions✅
+  Task:    "Email Brandon about v2 review timeline"
+  Source:  Block plugins workflow.md (vault)
 
 Proceed? [y/n]
 ```
 
-On `y`, create the task via the `todoist` skill. Optionally include a
-trailing reference like `(from: Block plugins workflow)` in the task body
-so Paul can trace it back later, but only if he wants — ask once and
-remember the preference.
+On `y`, create the task via the `todoist` skill. Apply the
+`Next_Actions✅` Todoist label automatically — this is the Todoist-side
+counterpart of the vault `#next_action` tag, marking the task as a
+next action across all of Paul's Todoist projects (it's a label, not
+a project, so it composes with whatever project Paul picked in
+Step 3). Optionally include a trailing reference like `(from: Block
+plugins workflow)` in the task body so Paul can trace it back later,
+but only if he wants — ask once and remember the preference.
 
 ### Step 5 — Record state
 
