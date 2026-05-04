@@ -677,6 +677,18 @@ The prompt explicitly invites both:
 > next action, or a joint area priority covering multiple issues under
 > one focus.
 
+If the active projects collectively carry `#next_action`-tagged tasks,
+offer them as a starting menu before Paul commits:
+
+> The `#next_action` tags across active projects right now: <list,
+> grouped by project>. Want to draw any of these into the Top 3, or
+> propose something else?
+
+Tagged tasks are natural Top 3 candidates because Paul has already
+flagged them as next actions; the only question left is whether they
+deserve attention *this week*. Don't push for selection from this list
+— it's a menu, not a recommendation.
+
 For joint-area items, ask Paul to name the area and list the
 constituent issues / tasks / project notes:
 
