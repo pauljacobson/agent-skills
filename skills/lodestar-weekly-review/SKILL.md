@@ -519,8 +519,8 @@ For each project, in order, render a **compact card** in this shape:
 [3 of 8] — Block plugins workflow
 Status: inprogress  ·  Due: 2026-05-15  ·  Last reviewed: 2026-04-12 (18 days ago)
 
-Top tasks (3 of 7 unchecked):
-  • Email Brandon about v2 review timeline
+Top tasks (3 of 7 unchecked, ★ = #next_action):
+  • ★ Email Brandon about v2 review timeline
   • Test the localisation fix on staging
   • Draft P2 post about the workflow
 
@@ -528,15 +528,39 @@ Notes (last entry, truncated):
   > Brandon happy with v1 output; v2 should narrow scope to migration cases…
 ```
 
-Then ask **one consolidated GTD question** — pick 1-3 prompts based on
-project state, but ask them as a single block, not sequentially:
+Mark each unchecked task carrying the inline `#next_action` tag with
+a leading `★`. The legend in the section header reminds Paul what the
+star means.
 
-> Quick check on Block plugins workflow:
-> - Still active, or shelf/someday?
-> - The top task ("Email Brandon...") — is that the very next action?
-> - Anything to capture or change?
->
-> Or just say "next" to mark reviewed and move on.
+Then ask **one consolidated GTD question** — pick 1-3 prompts based on
+project state, but ask them as a single block, not sequentially. The
+shape of the next-action prompt depends on how many tasks carry the
+`#next_action` tag:
+
+- **1 tagged**: cite it as the candidate.
+  > Quick check on Block plugins workflow:
+  > - Still active, or shelf/someday?
+  > - The `#next_action`-tagged task ("Email Brandon...") — is that
+  >   still the very next action?
+  > - Anything to capture or change?
+  >
+  > Or just say "next" to mark reviewed and move on.
+
+- **0 tagged** (any active project should have one): flag the gap.
+  > Quick check on Block plugins workflow:
+  > - Still active, or shelf/someday?
+  > - **No task tagged `#next_action`.** What's the very next physical
+  >   action? (Tag it `#next_action` in Obsidian to mark it; a Top 3
+  >   slot or a `lodestar-sync-todoist` push is optional.)
+  > - Anything to capture or change?
+
+- **2+ tagged**: sanity check.
+  > Quick check on Block plugins workflow:
+  > - Still active, or shelf/someday?
+  > - **N tasks tagged `#next_action`** — which is *the* next one?
+  >   (Multiple is fine if the project has parallel workstreams; worth
+  >   a quick sanity check.)
+  > - Anything to capture or change?
 
 Default action is **"next"** = mark reviewed (today's date) and advance.
 That's the OmniFocus one-tap pattern: most projects don't need
