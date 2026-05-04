@@ -93,7 +93,9 @@ multiple workstreams. When unsure (0 or 2+), always ask.
 
 ### Step 2 — Confirm the task text
 
-Show what will become the Todoist task:
+Strip `#next_action` (and any other inline `#tags`) from the task text
+before showing it. Tags are vault metadata, not part of the Todoist
+task. Then show what will become the Todoist task:
 
 > Source: `Block plugins workflow.md`
 > Task: "Email Brandon about v2 review timeline"
@@ -102,7 +104,9 @@ Show what will become the Todoist task:
 
 Allow Paul to refine the wording. Todoist task text often benefits from
 small tweaks (e.g. add a verb, drop project-internal jargon). The
-Obsidian task text stays unchanged regardless.
+Obsidian task text stays unchanged regardless — including the
+`#next_action` tag, which only comes off when the work is done (see
+"Tag lifecycle" below).
 
 ### Step 3 — Pick the destination Todoist project
 
