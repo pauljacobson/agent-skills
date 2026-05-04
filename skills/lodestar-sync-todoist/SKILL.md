@@ -5,9 +5,11 @@ description: >
   next action. Paul picks the task; Paul picks the destination Todoist
   project. Not a bulk sync — Obsidian holds the full project backlog,
   Todoist holds only the very next actions Paul has consciously elevated.
-  Use when Paul says "promote this to todoist", "add this as a next
-  action", "push to todoist", or runs /lodestar-sync-todoist. Pairs with
-  the `todoist` skill which wraps the `td` CLI.
+  Surfaces `#next_action`-tagged vault tasks as the strong candidates;
+  applies the `Next_Actions✅` Todoist label on push. Use when Paul says
+  "promote this to todoist", "add this as a next action", "push to
+  todoist", or runs /lodestar-sync-todoist. Pairs with the `todoist`
+  skill which wraps the `td` CLI.
 ---
 
 # lodestar-sync-todoist
