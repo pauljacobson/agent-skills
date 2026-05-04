@@ -136,29 +136,47 @@ any other content) untouched.
 
 #### Part B — Todoist-side: completed promotions
 
-Read `~/Git/Projects/lodestar/todoist-sync/synced.jsonl`. For each
-entry:
+Note on `td` capability (verified 2026-05-04): `td task view id:X
+--json` returns identical JSON for active and completed tasks (no
+`completed` / `isCompleted` field) and HTTP 400 for unknown IDs. There
+is no per-ID completion-status query. The working path is to **sweep
+the completion window** via `td completed --since <date> --json`,
+build a set of completed IDs, and cross-reference.
 
-1. Look up the vault task line. If the line no longer contains
-   `#next_action` (already removed by an earlier sweep, or by Paul
-   directly), skip — nothing to do.
-2. Otherwise, query Todoist via the `todoist` skill for the recorded
-   `todoist_id`. Three outcomes:
+Procedure:
 
-- **Completed** → surface and offer tag removal:
-  > Todoist task "Email Brandon about v2 review timeline" (Fission
-  > project) was marked complete on YYYY-MM-DD. Remove `#next_action`
-  > from the vault task in `Block plugins workflow.md`?
-- **Still active** → no surface, no action.
-- **Deleted / not found** → ask, don't assume:
-  > Couldn't find Todoist task <id> ("Email Brandon..."). Was it
-  > completed, or deleted unactioned? If completed, remove the tag.
-  > If you might re-promote it, leave the tag.
+1. Read `~/Git/Projects/lodestar/todoist-sync/synced.jsonl`.
+2. For each entry, look up the vault task line. If it no longer
+   contains `#next_action` (already removed by an earlier sweep, or by
+   Paul directly), drop the entry from the working set — nothing to do.
+3. If the working set is empty, skip the rest of Part B.
+4. Compute the completion-window `since` date:
+   - **Default**: the date of the most recent prior session summary in
+     `~/Git/Projects/lodestar/reviews/` (filename pattern
+     `YYYY-MM-DD.md`).
+   - **Fallback** (no prior reviews, or prior review is more than 30
+     days old): 30 days ago.
+5. Run `td completed --since <since> --json --all` (the `--all` flag
+   paginates fully so no `nextCursor` handling is needed). Collect IDs
+   into a set `completed_ids`.
+6. For each working-set entry, partition by signal:
+   - **`todoist_id ∈ completed_ids`** → completed within window. Surface:
+     > Todoist task "Email Brandon about v2 review timeline" (Fission
+     > project) was marked complete. Remove `#next_action` from the
+     > vault task in `Block plugins workflow.md`?
+   - **`td task view id:X --json` exits 0, but ID not in
+     `completed_ids`** → still active. No surface, no action.
+   - **`td task view id:X --json` exits non-zero (HTTP 400)** →
+     deleted, or completed before the window. Ask:
+     > Can't find Todoist task <id> ("Email Brandon..."). It was
+     > either completed before <since> or deleted. If completed,
+     > remove the `#next_action` tag. If you might re-promote it,
+     > leave the tag.
 
-If the `todoist` skill / `td` CLI doesn't support querying task state
-for arbitrary IDs, surface that as a known limitation and fall back:
-"Can't auto-check Todoist completion — list the tasks you completed
-in Todoist this week and I'll match them to vault tags."
+Rate-limit consideration: step 6's per-entry `td task view` calls only
+run for entries *not* in `completed_ids`. In practice the working set
+is small (only entries whose vault task still carries the tag), so
+this is bounded.
 
 #### Output
 
