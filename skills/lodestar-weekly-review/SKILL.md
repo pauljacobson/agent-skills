@@ -109,6 +109,66 @@ Inbox. If you find vault-synced tasks here (e.g. their text matches the
 ask: "These look like vault-synced tasks in Inbox — is your sync
 destination misconfigured?"
 
+### Step 1b — Stale `#next_action` tag cleanup
+
+The `#next_action` tag flags candidate next actions in vault project
+notes (see `lodestar-sync-todoist` for the convention). The tag stays
+on the task until the work is done. This step sweeps for tags that
+have gone stale via either of the two completion signals.
+
+Skip this step silently if `~/Git/Projects/lodestar/todoist-sync/synced.jsonl`
+does not exist *and* a vault grep for `#next_action` returns zero hits
+— there's nothing to clean.
+
+#### Part A — Vault-side: ticked tasks that still carry the tag
+
+Grep the project-notes directory (per `config.md`) for lines matching
+`^- \[x\] .*#next_action`. For each match, surface it:
+
+> "Email Brandon about v2 review timeline" was ticked in the vault
+> (in `Block plugins workflow.md`) but still carries `#next_action`.
+> Remove the tag?
+
+Capture the decision; defer the edit to Step 10 batched writes. The
+edit is purely textual — strip the inline `#next_action` token from
+the task line, leave the rest of the line (including the `[x]` and
+any other content) untouched.
+
+#### Part B — Todoist-side: completed promotions
+
+Read `~/Git/Projects/lodestar/todoist-sync/synced.jsonl`. For each
+entry:
+
+1. Look up the vault task line. If the line no longer contains
+   `#next_action` (already removed by an earlier sweep, or by Paul
+   directly), skip — nothing to do.
+2. Otherwise, query Todoist via the `todoist` skill for the recorded
+   `todoist_id`. Three outcomes:
+
+- **Completed** → surface and offer tag removal:
+  > Todoist task "Email Brandon about v2 review timeline" (Fission
+  > project) was marked complete on YYYY-MM-DD. Remove `#next_action`
+  > from the vault task in `Block plugins workflow.md`?
+- **Still active** → no surface, no action.
+- **Deleted / not found** → ask, don't assume:
+  > Couldn't find Todoist task <id> ("Email Brandon..."). Was it
+  > completed, or deleted unactioned? If completed, remove the tag.
+  > If you might re-promote it, leave the tag.
+
+If the `todoist` skill / `td` CLI doesn't support querying task state
+for arbitrary IDs, surface that as a known limitation and fall back:
+"Can't auto-check Todoist completion — list the tasks you completed
+in Todoist this week and I'll match them to vault tags."
+
+#### Output
+
+If both Part A and Part B return zero items: write one line "No stale
+`#next_action` tags found." and proceed to Step 2.
+
+Otherwise, summarise the captured decisions (count of tags pending
+removal, broken down by signal) and proceed to Step 2. The actual
+removals land in Step 10 batched writes.
+
 ### Step 2 — GitHub inbox sweep
 
 Run `gh-inbox` in **non-mutating mode** so Paul's own `/gh-inbox` triage
