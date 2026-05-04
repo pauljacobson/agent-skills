@@ -762,6 +762,7 @@ About to update:
 - 6 projects: reviewed → 2026-04-30
 - "Block plugins workflow": status → pending (waiting on Brandon)
 - "Training Simulator": new task added — "Scan TS issues this week"
+- 2 stale #next_action tags removed (1 ticked in vault, 1 completed in Todoist)
 - Todoist: 2 Inbox items deferred, 1 deleted, 3 assigned to projects
 - Top 3 added to Todoist
 
