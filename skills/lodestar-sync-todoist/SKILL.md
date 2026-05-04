@@ -54,7 +54,8 @@ Paul can specify the task in three ways:
    to Step 2.
 2. **Project named, task not specified**: "promote a task from Block
    plugins workflow" → read the project note, locate the real `## Tasks`
-   section (rule below), list the unchecked tasks, ask which one.
+   section (rule below), and surface candidates per the **tag-driven
+   surfacing** rule below. Ask which one.
 3. **Nothing specified**: "I want to promote a task to Todoist" → list
    active projects (the **"Working on"** view in `Bases/Projects.base`)
    and ask which one. Then drill into its tasks as in path 2.
@@ -68,6 +69,27 @@ Take the **last** such heading in the file as the real one.
 
 If no real `## Tasks` heading is found, or the section is empty / contains
 only an empty placeholder, tell Paul there's nothing to promote and stop.
+
+#### Tag-driven candidate surfacing
+
+Within the unchecked tasks of the located `## Tasks` section, count how
+many lines carry the inline `#next_action` tag. Three branches:
+
+- **Exactly 1 tagged**: that's the strong candidate. Show it and ask
+  "This task is tagged `#next_action`. Use it, or pick something else?"
+  — accept silence/yes as confirmation; if Paul wants a different task,
+  list the full set.
+- **0 tagged**: no pre-flagged next action. Ask: "No task in this
+  project carries `#next_action`. Pick one from the list below, or add
+  the tag in Obsidian first so it's marked as the next action going
+  forward?" — then list the full set.
+- **2+ tagged**: list only the tagged tasks first, framed: "N tasks
+  carry `#next_action` — which one?" If Paul wants a non-tagged task,
+  he can ask for the full list.
+
+The tag is a candidate marker, not an exclusivity claim — Paul may
+genuinely have parallel next actions, especially in projects with
+multiple workstreams. When unsure (0 or 2+), always ask.
 
 ### Step 2 — Confirm the task text
 
