@@ -165,6 +165,21 @@ that. Just log the fact.
 
 If creation fails, surface the error and don't write to `synced.jsonl`.
 
+## Tag lifecycle
+
+The vault `#next_action` tag stays on the task line through promotion.
+It only comes off when the underlying work is done. The weekly review
+sweeps for two completion signals (see `lodestar-weekly-review` Step
+1b):
+
+1. The Todoist task this tag is bound to (via `todoist-sync/synced.jsonl`'s
+   `todoist_id`) is marked complete in Todoist.
+2. The Obsidian task line is marked done (`- [x]`).
+
+Either signal is a cue to remove the tag, with confirmation — this
+skill never auto-edits the vault task. The `todoist_id` recorded in
+Step 5 is what makes the Todoist-side check possible; don't drop it.
+
 ## Rules
 
 - **One task per invocation.** This is the whole point. If Paul asks for
