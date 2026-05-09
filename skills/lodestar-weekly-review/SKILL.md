@@ -633,7 +633,9 @@ Per-project rules of thumb:
 
 If Paul wants to promote the next action to Todoist now, ask which
 Todoist project (never default to Inbox). Defer the actual write to the
-batched-writes step (Step 10).
+batched-writes step (Step 10). Every `#next_action`-tagged vault task
+pushed to Todoist **must** carry the `Next_Actions✅` label — see Step 10
+for the three-step write pattern (add → move → label).
 
 **Don't go deep by default.** 60-90 seconds per project is the target;
 if Paul wants to think out loud on one, give him room, but the prompt
