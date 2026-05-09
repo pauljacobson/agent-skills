@@ -448,6 +448,38 @@ Capture the choice as `stage2_mode` in working memory:
   `inprogress` or empty after triage) and re-runs the card flow on
   just those.
 
+#### Triage UI generation (triage modes only)
+
+When `stage2_mode` is `triage_only` or `triage_then_deep_dive`, generate
+the interactive triage UI **before** the per-project pass begins:
+
+```bash
+cd ~/Git/Projects/lodestar
+python3 scripts/generate-triage-ui.py [--exclude "Title 1,Title 2"]
+```
+
+The `--exclude` flag accepts comma-separated project titles already
+handled earlier in the session (e.g. Lodestar from a Stage 0 pre-pass).
+The script calls `scripts/to-review.py --json` internally to get the
+live queue and writes a fresh `triage-ui/index.html` — so the UI always
+reflects the actual current queue, not stale data.
+
+Open the UI via the Claude Preview MCP (`preview_start`) pointing at
+`~/Git/Projects/lodestar/triage-ui/index.html`. Paul uses the per-card
+buttons to triage each project (Keep / Shelve / Someday / Pending /
+Complete / Deep-dive). When finished, he clicks **"Finish & export → JSON"**
+to copy the JSON decisions block, then pastes it into the conversation.
+
+Process the pasted JSON as the triage decisions for Step 10's batched
+writes — no further per-project prompting needed for simple triage
+actions. Projects Paul marked "Deep-dive" become the active subset for
+the card-flow pass (triage-then-deep-dive) or are flagged as needing
+a follow-up session (triage-only).
+
+If `generate-triage-ui.py` fails (script missing, `to-review.py` errors,
+Preview MCP unavailable), fall back to the conversational triage-form
+flow documented below.
+
 #### Triage-form per-project flow
 
 Render a **minimal card** — title, status, last-reviewed date. No top
