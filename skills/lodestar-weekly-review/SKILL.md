@@ -762,8 +762,10 @@ Three destinations:
 
 - **Todoist** — Paul names the destination project (per `config.md` §
   Todoist: never Inbox; never default; the choice depends on work area).
-  Add a `@top3` label or due-today flag if Paul has a convention.
-  Defer the actual write to Step 10 batched writes.
+  Every task promoted from a vault `#next_action` tag **must** carry the
+  `Next_Actions✅` label (Todoist label id: `2152094658`). Defer all
+  Todoist writes to Step 10 batched writes; the three-step pattern
+  documented there handles the label correctly.
 
 - **Vault project note** — when the work is already tracked in a vault
   project note + GitHub issues and Paul will action it via Claude Code
