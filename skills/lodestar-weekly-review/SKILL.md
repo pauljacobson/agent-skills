@@ -818,13 +818,36 @@ About to update:
 - "Training Simulator": new task added — "Scan TS issues this week"
 - 2 stale #next_action tags removed (1 ticked in vault, 1 completed in Todoist)
 - Todoist: 2 Inbox items deferred, 1 deleted, 3 assigned to projects
-- Top 3 added to Todoist
+- Top 3 added to Todoist (all with Next_Actions✅ label)
 
 Proceed?
 ```
 
 Only write on explicit "yes" / "proceed" / equivalent. If Paul says no or
 modifies, redo the confirmation. **Never partial-write.**
+
+#### Todoist write pattern for promoted `#next_action` tasks
+
+Every vault `#next_action` task pushed to Todoist in this step **must**
+carry the `Next_Actions✅` label (id: `2152094658`). The `td task add`
+command does not support `--json`, and multi-word project names do not
+parse via NLP — use the three-step pattern:
+
+```bash
+# 1. Add to Inbox (NLP parses date/priority; project is handled in step 2)
+td task add "Task text here"           # note the returned task ID
+
+# 2. Move to the correct project
+td task move "id:<id>" --project "Family financial"
+
+# 3. Apply the Next_Actions✅ label (replaces ALL labels — include any
+#    context labels too, comma-separated)
+td task update "id:<id>" --labels "Next_Actions✅"
+# or, if a context label also applies:
+td task update "id:<id>" --labels "Next_Actions✅,Computer💻"
+```
+
+Omitting step 3 is the error that occurred on 2026-05-09. Never skip it.
 
 ### Step 10b — "To review" invariant check
 
