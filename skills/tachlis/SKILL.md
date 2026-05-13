@@ -13,7 +13,7 @@ description: >
   unpack jargon so the same information lands.
 ---
 
-# Weak Brain — re-explain so it lands
+# Tachlis — re-explain so it lands
 
 ## Why this skill exists
 
