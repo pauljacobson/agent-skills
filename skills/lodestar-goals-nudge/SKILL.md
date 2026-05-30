@@ -118,6 +118,28 @@ Append to `~/Git/Projects/lodestar/nudges/log.jsonl` as
 `lodestar-goals-nudge`. If Paul accepts the offer (e.g. "yes, add it"),
 update the entry with `"action":"acted"` after the action completes.
 
+## Routine review output (daily-note surfacing)
+
+After surfacing the goal/area and appending to `nudges/log.jsonl`, route the
+output into the daily note via `scripts/routine_review.py`. See
+`plans/20260530-routine-review-daily-note-design.md`.
+
+1. `python3 ~/Git/Projects/lodestar/scripts/routine_review.py status` — read
+   `daily_note_exists` and `last_summary_posted`.
+2. Compose **detail** (full goals-nudge output) and **summary** (1-3 lines;
+   catch-up since `last_summary_posted` if a prior run was deferred).
+3. Post:
+   ```bash
+   python3 ~/Git/Projects/lodestar/scripts/routine_review.py post \
+     --routine "Goals Nudge" \
+     --detail-file /tmp/rr_detail.md \
+     --summary-file /tmp/rr_summary.md
+   ```
+4. A `deferred` result is expected on early starts; the next run catches up.
+   Do not create the daily note yourself.
+
+**Idempotent for the slot:** re-invoking refreshes the single block.
+
 ### Step 7 — Self-perpetuating reminder (optional)
 
 Same pattern as `lodestar-daily-check`: after the run, check Todoist for the next scheduled `Run /lodestar-goals-nudge` task. If missing, offer to create it (default cadence: Tue/Thu 16:00). Skip the offer if recently declined.
