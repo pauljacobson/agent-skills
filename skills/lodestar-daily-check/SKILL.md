@@ -99,6 +99,41 @@ Append to `~/Git/Projects/lodestar/nudges/log.jsonl`:
 If Paul responds (in the same conversation) with "scheduled it" / "added to
 todoist" / etc., append a follow-up entry with `"action":"acted"`.
 
+## Routine review output (daily-note surfacing)
+
+After surfacing the day's item and appending to `nudges/log.jsonl`, route the
+output into the daily note via `scripts/routine_review.py`. See
+`plans/20260530-routine-review-daily-note-design.md`.
+
+1. Check state and daily-note existence:
+   ```bash
+   python3 ~/Git/Projects/lodestar/scripts/routine_review.py status
+   ```
+   Read `daily_note_exists` and `last_summary_posted` from the JSON.
+
+2. Compose two pieces of text:
+   - **detail** — the full daily-check output for the routine note (the same
+     content you'd show in chat).
+   - **summary** — a tight 1-3 line markdown summary for the daily note. If
+     `last_summary_posted` is older than today (a prior run was deferred), make
+     the summary a **catch-up** covering everything since that date (read the
+     relevant `nudges/log.jsonl` entries).
+
+3. Write each to a temp file and post:
+   ```bash
+   python3 ~/Git/Projects/lodestar/scripts/routine_review.py post \
+     --routine "Daily Check" \
+     --detail-file /tmp/rr_detail.md \
+     --summary-file /tmp/rr_summary.md
+   ```
+
+4. If the result is `{"status":"deferred"}`, the daily note didn't exist yet —
+   that's expected on early starts; the next run with a daily note catches up.
+   Do not retry or create the daily note yourself.
+
+**Idempotent for the slot:** re-invoking the skill the same day refreshes the
+single `### Routine review` block rather than duplicating it.
+
 ### Step 5 — Self-perpetuating reminder (optional)
 
 After the run, check Todoist for an upcoming `Run /lodestar-daily-check in Claude` task scheduled for the next weekday. If none exists, offer:
