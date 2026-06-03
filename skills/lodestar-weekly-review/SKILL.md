@@ -1011,6 +1011,8 @@ not authenticated), Gmail (no rules file yet)
 YAML repairs, N zombie decisions
 **`#next_action` cleanup** (omit line if zero): N tags removed (M
 ticked in vault, K completed in Todoist)
+**Linear tracked issues** (omit line if skipped/none): N open gaps across M
+issues (K new this week, surfaced as candidates)
 **"To review" queue**: empty ✓  *or*  N remaining (reasons: <reasons>)
 
 #### Top 3 for the week ahead
