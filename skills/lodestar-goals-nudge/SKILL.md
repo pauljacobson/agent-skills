@@ -88,11 +88,13 @@ Decision logic, in order:
 1. **Recent log dedup.** Read last 14 days of `nudges/log.jsonl`. Skip any
    goal/area that was nudged in the last 5 days unless Paul logged
    `"action":"acted"` on it (i.e. he engaged — feel free to re-engage).
-1b. **Tracked-issue eligibility (tighter dedup).** Tracked Linear issues use a
-   **3-day** dedup window (not 5), keyed by issue id (e.g. `TSCODE-406`). A
-   tracked issue with an open gap older than **7 days** and not surfaced in the
-   last 3 days is an eligible candidate; rank it by oldest-gap age alongside
-   quiet goals/areas in rule 3. Log it with `"goal":"<issue-id>"`.
+1b. **Tracked-item eligibility (per-row dedup).** Tracked Linear items use a
+   **per-row** `Reminder` dedup window (`config.md` table — 3 days for
+   TSCODE-406, 5 by default), keyed by the row's `ref` (e.g. `TSCODE-406`). A
+   tracked item whose oldest open gap is older than its `staleness_days` (7 for
+   TSCODE-406, 14 by default) and not surfaced within its `reminder_days` window
+   is an eligible candidate; rank it by oldest-gap age alongside quiet
+   goals/areas in rule 3. Log it with `"goal":"<ref>"`.
 2. **Emerging area priority.** If the **Training Simulator plugin** has been
    quiet 14+ days, prefer it (explicit instruction in `goal-mapping.md`).
 3. **Quiet-longest wins.** Among remaining candidates, pick the goal/area
