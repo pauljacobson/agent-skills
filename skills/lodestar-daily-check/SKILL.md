@@ -55,6 +55,10 @@ In parallel:
   status.
 - Read `lead-calls-prep/references/goals.md` for current goals + Emerging
   Areas section.
+- Read the **tracked Linear issues** from `config.md` § Linear. For each, fetch
+  open gaps (`resolvedAt: null`) and note the oldest gap's age. Read-only;
+  standalone Linear MCP primary, ContextA8C fallback. Skip silently if neither
+  is reachable (don't block the morning check on Linear).
 - Read the last 5 entries in `nudges/log.jsonl` to avoid recycling.
 
 ### Step 2 — Pick the surface
