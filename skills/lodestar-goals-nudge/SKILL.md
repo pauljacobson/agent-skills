@@ -74,6 +74,7 @@ Goal 2 (AI-Assisted Workflows, Active):     14 mentions
 Goal 3 (Scripting/CLI, Active):              2 mentions
 Training Simulator (Emerging):               0 mentions, last seen YYYY-MM-DD
 Same-site migration tracking (Emerging):     1 mention
+TSCODE-406 (LibreChat agent → Goal 2):       9 open gaps, oldest 11 days
 ...
 ```
 
