@@ -219,42 +219,84 @@ sweep may be incomplete." Continue.
 
 ### Step 2b — Linear tracked-issues sweep
 
+Lodestar tracks specific Linear items (read-only) as an 8th signal source — both
+whole **projects** (`kind: project`) and single tracking **issues**
+(`kind: issue`). See `config.md` § "Linear (tracked issues)". This sweep
+surfaces each tracked entry's open gaps that are NOT already represented in its
+vault note, so the work keeps moving without lodestar maintaining a parallel
+list.
+
 If `preflight_skip["linear"]` is True, silently skip to Step 3.
 
-Read the **tracked issues** table from `config.md` § Linear. For each tracked
-issue, fetch its comments via the **standalone Linear MCP** (`list_comments`);
-fall back to the ContextA8C `linear` provider if the MCP is unavailable.
-**Read-only** — never resolve, edit, or create anything in Linear.
+The deterministic parts (parse the table, filter open gaps, flag new-since,
+dedup against the vault note) live in `scripts/linear_tracked.py`; the live
+Linear fetch is done here via the MCP. **Read-only** — never resolve, edit, or
+create anything in Linear.
 
-Split the comments into two tiers (see `config.md` § Linear → Read semantics):
+Procedure:
 
-- **New since last review** (`createdAt` after the most recent `reviews/*.md`
-  date; 30-day fallback if none) → surface these as **candidates**, same three
-  options as the GitHub sweep:
+1. Read the tracked list:
+   ```bash
+   python3 ~/Git/Projects/lodestar/scripts/linear_tracked.py config
+   ```
+   Each row gives `ref`, `kind`, `vault_note`, etc. If the list is empty, write
+   one line ("No tracked Linear items configured.") and move to Step 3.
 
-  > TSCODE-406 (LibreChat migration agent) — 2 new gaps since your last review:
-  > 1. "<comment summary>" — <author>, <date>
-  > 2. "<comment summary>" — <author>, <date>
-  > Any of these become a task in the vault project note, a new opportunity, or ignore?
+2. Compute the `since` date — the most recent prior session-summary date in
+   `~/Git/Projects/lodestar/reviews/` (filename `YYYY-MM-DD.md`); 30-day
+   fallback if none (or the latest is >30 days old).
 
-  - **Task in existing project** → which (default: the issue's vault note from
-    the config table); queue the `- [ ]` edit for Step 10 batched writes.
-  - **New opportunity** → suggest `/lodestar-capture-opportunity` after the review.
-  - **Ignore** → no-op; the comment stays in Linear.
+3. For each tracked entry, fetch its live state via the **standalone Linear
+   MCP** (read-only), falling back to the ContextA8C `linear` provider if the
+   MCP is unavailable; write the result JSON to a temp file:
+   - `kind: project` → `list_issues` with `project: <ref>` → `/tmp/lt_<n>.json`
+     (shape: `{"issues": [...]}` with `statusType`, `createdAt`, `url`).
+   - `kind: issue` → `list_comments` with `issueId: <ref>` → `/tmp/lt_<n>.json`
+     (shape: `{"comments": [...]}` with `parentId`, `resolvedAt`, `createdAt`).
+   - Graceful degradation: if the fallback can't supply `resolvedAt`, treat all
+     comments as open and lean on the `createdAt` watermark.
 
-- **All open gaps** (`resolvedAt: null`) → show only as a **count + link**, do
-  **not** re-pitch them individually (this is what keeps already-captured gaps
-  from being re-offered every week):
+4. Run the dedup / new-flag filter (handles both kinds):
+   ```bash
+   python3 ~/Git/Projects/lodestar/scripts/linear_tracked.py surface \
+     --kind <kind> --json-file /tmp/lt_<n>.json \
+     --vault-note "<vault root>/<vault_note>.md" --since <since>
+   ```
 
-  > TSCODE-406 has 9 open gaps total — <issue url>
+5. Surface the results per tracked entry in **two tiers** (see `config.md`
+   § Linear → Read semantics):
 
-If a comment looks already addressed (e.g. Paul says a fix shipped), you may
-**remind** him to resolve it in Linear himself — but never resolve it for him.
+   - **New since last review** (`is_new: true` in the `surface` output) → offer
+     as **candidates**, same three options as the GitHub sweep:
 
-If both Linear paths are unreachable and the source wasn't pre-skipped, note it
-in one line ("Linear unavailable — skipping the tracked-issues sweep") and
-continue. If a tracked issue has 0 new comments: "No new gaps on <issue> since
-last review." and move on.
+     > Linear tracked — <title> (<N> open gaps, <K> new since last review):
+     > 1. ★ HAP-2923 — Generate Linear templates… (Backlog) [new]
+     > 2. "<gap summary>" [new]
+     > Any of these become a task in the vault project note, a new opportunity, or ignore?
+
+     - **Task in existing project** → which (default: the entry's vault note from
+       the config row); queue the `- [ ]` edit for Step 10 batched writes.
+       Adding it also makes the next sweep dedup it.
+     - **New opportunity** → suggest `/lodestar-capture-opportunity` after the
+       review.
+     - **Ignore** → no-op; it stays in Linear (lodestar never mutates Linear).
+
+   - **All open gaps** → show only as a **count + link**, do **not** re-pitch
+     them individually (this is what keeps already-captured gaps from being
+     re-offered every week):
+
+     > <title> has 9 open gaps total — <issue/project url>
+
+6. If a comment/issue looks already addressed (e.g. Paul says a fix shipped),
+   you may **remind** him to resolve it in Linear himself — but never resolve it
+   for him.
+
+If `surface` returns `[]` for an entry: "No new gaps on <title> since last
+review." If both Linear paths are unreachable and the source wasn't pre-skipped,
+note it in one line ("Linear unavailable — skipping the tracked-issues sweep")
+and continue. Never block the review on Linear.
+
+**Read-only**: never resolve, edit, or create Linear comments or issues.
 
 ### Step 3 — Journal sweep for unrecorded commitments
 
