@@ -60,11 +60,14 @@ For each goal and emerging area:
 - Note Linear/PR mentions if visible in journal.
 - Note whether the area appears in the recent weekly update.
 
-For **tracked Linear issues** (`config.md` § Linear), score differently — by
-**open-gap age, not journal keywords**: read open gaps (`resolvedAt: null`) via
-the standalone Linear MCP (ContextA8C fallback; read-only) and record the oldest
-gap's age. These are independent candidates, not gated behind the parent goal's
-journal quietness.
+For **tracked Linear items** (`config.md` § Linear), score differently — by
+**open-gap age, not journal keywords**. Parse the tracked list (`python3
+~/Git/Projects/lodestar/scripts/linear_tracked.py config`), fetch each row's
+live state via the Linear MCP by kind (`list_issues` for project,
+`list_comments` for issue; ContextA8C `linear` fallback; read-only), and record
+the oldest open-gap age via `linear_tracked.py stale`. Keep each row's
+`staleness_days` / `reminder_days` to hand for rule 1b. These are independent
+candidates, not gated behind the parent goal's journal quietness.
 
 Build a small scoreboard in working memory:
 
