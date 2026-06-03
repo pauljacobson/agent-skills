@@ -107,6 +107,10 @@ Append to `~/Git/Projects/lodestar/nudges/log.jsonl`:
 {"date":"2026-04-30","skill":"lodestar-daily-check","goal":"Goal 1","message":"<the message you sent>","action":"surfaced"}
 ```
 
+For a **tracked-issue surface** (option 4), set `"goal"` to the issue id (e.g.
+`"TSCODE-406"`) per `config.md` § Linear — this keeps its 3-day dedup
+independent of the parent goal's journal nudges.
+
 If Paul responds (in the same conversation) with "scheduled it" / "added to
 todoist" / etc., append a follow-up entry with `"action":"acted"`.
 
