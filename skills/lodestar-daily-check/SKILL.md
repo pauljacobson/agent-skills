@@ -74,10 +74,17 @@ Choose **one** of:
    quick GTD pass on just that one?"
 3. **A quiet goal.** Use the keyword/duration thresholds in
    `goal-mapping.md`. Pick the goal that's been quiet longest.
-4. **An emerging area** from `goals.md`. The Training Simulator plugin is
+4. **A tracked Linear issue with a stale gap.** Per `config.md` § Linear and
+   the `goal-mapping.md` "Tracked Linear issues" map. Surface when an open gap
+   (`resolvedAt: null`) is older than **7 days** AND the issue wasn't surfaced
+   in the last **3 days** (`nudges/log.jsonl`, keyed by issue id, e.g.
+   `TSCODE-406`). Independent of the parent goal's journal signal. Cite the
+   open-gap count + the oldest gap's date; offer a small concrete step (e.g.
+   "want to slot 20 minutes to clear one, or push it to Todoist?").
+5. **An emerging area** from `goals.md`. The Training Simulator plugin is
    explicitly flagged as easy to forget — give it preference among emerging
    areas if it's been quiet 14+ days.
-5. **Nothing.** If none of the above triggers, output:
+6. **Nothing.** If none of the above triggers, output:
    > Nothing pressing this morning. [Brief observation about what's looking
    > healthy — e.g. "Goal 2 had three journal mentions yesterday."] Have a
    > good day.
