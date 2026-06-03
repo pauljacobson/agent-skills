@@ -55,10 +55,15 @@ In parallel:
   status.
 - Read `lead-calls-prep/references/goals.md` for current goals + Emerging
   Areas section.
-- Read the **tracked Linear issues** from `config.md` § Linear. For each, fetch
-  open gaps (`resolvedAt: null`) and note the oldest gap's age. Read-only;
-  standalone Linear MCP primary, ContextA8C fallback. Skip silently if neither
-  is reachable (don't block the morning check on Linear).
+- Read the **tracked Linear items** (`python3
+  ~/Git/Projects/lodestar/scripts/linear_tracked.py config`). For each row,
+  fetch its live state via the Linear MCP (read-only) by kind — `list_issues`
+  (project) or `list_comments` (issue) — write it to a temp file, and compute
+  the oldest open-gap age with `linear_tracked.py stale --kind <kind>
+  --json-file <tmp> --today <today>`. Keep each row's `staleness_days` /
+  `reminder_days` to hand. Standalone Linear MCP primary, ContextA8C `linear`
+  fallback. Skip silently if neither is reachable (the morning check must never
+  block on Linear).
 - Read the last 5 entries in `nudges/log.jsonl` to avoid recycling.
 
 ### Step 2 — Pick the surface
