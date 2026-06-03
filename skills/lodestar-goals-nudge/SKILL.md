@@ -60,6 +60,12 @@ For each goal and emerging area:
 - Note Linear/PR mentions if visible in journal.
 - Note whether the area appears in the recent weekly update.
 
+For **tracked Linear issues** (`config.md` § Linear), score differently — by
+**open-gap age, not journal keywords**: read open gaps (`resolvedAt: null`) via
+the standalone Linear MCP (ContextA8C fallback; read-only) and record the oldest
+gap's age. These are independent candidates, not gated behind the parent goal's
+journal quietness.
+
 Build a small scoreboard in working memory:
 
 ```
