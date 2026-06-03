@@ -217,6 +217,45 @@ If 0 items: "GitHub inbox is quiet for the last 7 days." Move on.
 If `partial_failures` is non-empty: "Note: N gh-inbox queries failed —
 sweep may be incomplete." Continue.
 
+### Step 2b — Linear tracked-issues sweep
+
+If `preflight_skip["linear"]` is True, silently skip to Step 3.
+
+Read the **tracked issues** table from `config.md` § Linear. For each tracked
+issue, fetch its comments via the **standalone Linear MCP** (`list_comments`);
+fall back to the ContextA8C `linear` provider if the MCP is unavailable.
+**Read-only** — never resolve, edit, or create anything in Linear.
+
+Split the comments into two tiers (see `config.md` § Linear → Read semantics):
+
+- **New since last review** (`createdAt` after the most recent `reviews/*.md`
+  date; 30-day fallback if none) → surface these as **candidates**, same three
+  options as the GitHub sweep:
+
+  > TSCODE-406 (LibreChat migration agent) — 2 new gaps since your last review:
+  > 1. "<comment summary>" — <author>, <date>
+  > 2. "<comment summary>" — <author>, <date>
+  > Any of these become a task in the vault project note, a new opportunity, or ignore?
+
+  - **Task in existing project** → which (default: the issue's vault note from
+    the config table); queue the `- [ ]` edit for Step 10 batched writes.
+  - **New opportunity** → suggest `/lodestar-capture-opportunity` after the review.
+  - **Ignore** → no-op; the comment stays in Linear.
+
+- **All open gaps** (`resolvedAt: null`) → show only as a **count + link**, do
+  **not** re-pitch them individually (this is what keeps already-captured gaps
+  from being re-offered every week):
+
+  > TSCODE-406 has 9 open gaps total — <issue url>
+
+If a comment looks already addressed (e.g. Paul says a fix shipped), you may
+**remind** him to resolve it in Linear himself — but never resolve it for him.
+
+If both Linear paths are unreachable and the source wasn't pre-skipped, note it
+in one line ("Linear unavailable — skipping the tracked-issues sweep") and
+continue. If a tracked issue has 0 new comments: "No new gaps on <issue> since
+last review." and move on.
+
 ### Step 3 — Journal sweep for unrecorded commitments
 
 Read the last 7 days of `journal`-tagged notes. Look for verb phrases that
