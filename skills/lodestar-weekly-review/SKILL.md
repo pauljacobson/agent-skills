@@ -1209,6 +1209,16 @@ tasks — don't error.
 
 ## Rules
 
+- **Verify live issue status before recommending action.** Linear and
+  GitHub issues change between reviews — and even within a session. Before
+  recommending any next step, Top 3 item, follow-up, or close-out action
+  that references a specific Linear/GitHub issue, confirm its *current*
+  status with a live read (Linear MCP `get_issue`/`list_issues`;
+  `gh`/gh-inbox), not from the prior session summary, this session's
+  earlier chat/notes, or memory. The session summary is a deliberately
+  stale snapshot — treat it as a pointer to re-verify, never as ground
+  truth for status. If a live read isn't possible, label the recommendation
+  as unverified rather than asserting the issue's state.
 - **Confirm before mutating any vault frontmatter.** Always batch.
 - **Inbox sweeps are one-at-a-time.** Never bulk-process. The whole point
   is conscious decisions.
