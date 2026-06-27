@@ -1180,6 +1180,11 @@ descriptive; turning learnings into issues is a separate decision.
 
 #### Close affirmation
 
+Before the affirmation, re-verify the live status of any Linear/GitHub
+issue named in the Top 3 or follow-ups (see Rules → "Verify live issue
+status"). Don't carry forward a status inferred earlier in the session or
+from the prior review.
+
 End with a one-line affirmation, calibrated to actual progress. The GTD
 note frames this well: "feel ready and clear for the upcoming week."
 
