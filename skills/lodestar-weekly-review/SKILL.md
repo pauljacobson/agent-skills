@@ -86,14 +86,56 @@ oldest first. Show the count and start:
 
 For each item, four action paths:
 
-- **Assign to project** — ask which Todoist project (or which vault
-  project, if it should become a `- [ ]` line in a project note instead).
-  Defer the move to the batched-writes step.
+- **Assign to project** — use the **Numbered Todoist destination picker**
+  below (or ask which vault project, if it should become a `- [ ]` line in
+  a project note instead). Defer the move to the batched-writes step.
 - **Defer** — ask when (e.g. "next week", "2026-05-15"). Confirm:
   "Defer '...' to YYYY-MM-DD? [y/n]" before the write.
 - **Delete** — explicit confirmation per item: "Delete '...' from Todoist?
   [y/n]". Never bulk-delete.
 - **Leave** — skip; the task stays in Inbox for the next sweep.
+
+#### Numbered Todoist destination picker
+
+Use this flow every time the weekly review needs Paul to choose a Todoist
+project: Inbox assignment in Step 1, a project-task promotion in Step 6, or a
+Todoist/"Both" destination in Step 9.
+
+1. Run `td project list --json` and build the choices from the live response.
+2. Exclude **Inbox**. Never offer it as a destination.
+3. Resolve hierarchy through each project's `parentId` and display enough
+   context to distinguish duplicate or similar names, for example:
+   `Work > Automattic > Testing and issue reporting`.
+4. If Paul supplied a project name, first try a case-insensitive exact match
+   against the live Todoist list. Accept it directly only when the match is
+   unique. If multiple projects share that name, show just those matches with
+   their full hierarchies and require a displayed number. A vault project name
+   is not a Todoist match unless it actually exists in the live response.
+5. Otherwise rank likely matches first using the task text, source vault
+   project, stated work area, and case-insensitive name/token overlap. Do not
+   treat ranking as selection and do not invent a default.
+6. Present up to eight likely matches as a numbered shortlist, followed by
+   `0. Show all Todoist projects`. If there are no meaningful likely matches,
+   skip straight to the full list.
+7. The full list is numbered, grouped by top-level project, and alphabetized
+   within each group. Keep the number-to-project mapping in working memory for
+   this prompt.
+8. Accept either the displayed number or a uniquely matching exact project
+   name. Read the selected number/name back with its hierarchy and capture the
+   real Todoist project ID for Step 10. If a name is ambiguous, or the reply is
+   neither a displayed number nor a unique exact name in the live response,
+   re-show the relevant choices rather than guessing.
+
+Example:
+
+> Which Todoist project should receive this task?
+>
+> 1. Work > Automattic > Testing and issue reporting
+> 2. Work > Automattic > Issue tracking for follow-up
+> 3. Work > Automattic
+> 0. Show all Todoist projects
+>
+> Reply with the number or exact project name.
 
 If 10+ items, offer: "That's a lot. Process the oldest 5 today and pick up
 the rest next week?" Don't push to clear everything — that's the failure
@@ -529,7 +571,7 @@ Capture the choice as `stage2_mode` in working memory:
   `inprogress` or empty after triage) and re-runs the card flow on
   just those.
 
-#### Triage UI generation (triage modes only)
+#### Visual review dashboard (triage modes only)
 
 When `stage2_mode` is `triage_only` or `triage_then_deep_dive`, generate
 the interactive triage UI **before** the per-project pass begins:
@@ -541,25 +583,52 @@ python3 scripts/generate-triage-ui.py [--exclude "Title 1,Title 2"]
 
 The `--exclude` flag accepts comma-separated project titles already
 handled earlier in the session (e.g. Lodestar from a Stage 0 pre-pass).
-The script calls `scripts/to-review.py --json` internally to get the
-live queue and writes a fresh `triage-ui/index.html` — so the UI always
-reflects the actual current queue, not stale data.
+The script calls `scripts/to-review.py --json` internally to get the live
+queue. It writes a canonical `reviews/YYYY-MM-DD-dashboard.html` plus a
+compatibility copy at `triage-ui/index.html`, so the UI always reflects the
+actual current queue rather than stale data. Read
+`references/weekly-review-dashboard.md` for the full dashboard contract.
 
-Open the UI via the Claude Preview MCP (`preview_start`) pointing at
-`~/Git/Projects/lodestar/triage-ui/index.html`. Paul uses the per-card
-buttons to triage each project (Keep / Shelve / Someday / Pending /
-Complete / Deep-dive). When finished, he clicks **"Finish & export → JSON"**
-to copy the JSON decisions block, then pastes it into the conversation.
+Open the UI via the available Preview/in-app browser integration pointing at
+`~/Git/Projects/lodestar/triage-ui/index.html`. If that browser backend is
+unavailable, **do not immediately fall back to chat**. Run the generator again
+with `--open` to open the dated dashboard in Paul's system browser:
 
-Process the pasted JSON as the triage decisions for Step 10's batched
-writes — no further per-project prompting needed for simple triage
-actions. Projects Paul marked "Deep-dive" become the active subset for
-the card-flow pass (triage-then-deep-dive) or are flagged as needing
-a follow-up session (triage-only).
+```bash
+python3 scripts/generate-triage-ui.py [--exclude "Title 1,Title 2"] --open
+```
 
-If `generate-triage-ui.py` fails (script missing, `to-review.py` errors,
-Preview MCP unavailable), fall back to the conversational triage-form
-flow documented below.
+Verify the page title and queue count. Paul uses the per-card buttons to triage
+each project and may also capture tasks and notes. When finished, he clicks
+**"Finish review & export →"** and copies the JSON payload into the
+conversation.
+
+The payload is a versioned envelope:
+
+```json
+{ "schema": 1, "date": "YYYY-MM-DD", "projects": [ ... ] }
+```
+
+**Validate `schema` before doing anything else with it.** If `schema` is not
+`1` (including a missing `schema` key — that is the old unversioned array from a
+pre-contract dashboard), **halt and tell Paul the dashboard and skill have
+drifted**: the dashboard generated a payload this skill version does not know
+how to read. Ask him to regenerate the dashboard from the current
+`scripts/generate-triage-ui.py`, or to update this skill — do **not** guess at
+the fields or attempt any batched writes. This is the consumer half of the
+contract in `references/weekly-review-dashboard.md`.
+
+Once `schema` is `1`, process `payload.projects` as the triage decisions,
+proposed task additions, and notes for Step 10's batched writes — no further
+per-project prompting is needed for simple triage actions. Projects Paul marked
+"Deep-dive" become the active subset for the card-flow pass
+(triage-then-deep-dive) or are flagged as needing a follow-up session
+(triage-only).
+
+Fall back to the conversational triage-form flow below only when dashboard
+generation fails, or both the Preview/in-app route and the `--open` system
+browser fallback fail. Report the failed visual routes briefly before the
+fallback.
 
 #### Triage-form per-project flow
 
@@ -712,9 +781,10 @@ Per-project rules of thumb:
   want a concrete next step?")
 - If pending status implies waiting on someone → confirm who/what
 
-If Paul wants to promote the next action to Todoist now, ask which
-Todoist project (never default to Inbox). Defer the actual write to the
-batched-writes step (Step 10). Every `#next_action`-tagged vault task
+If Paul wants to promote the next action to Todoist now, use the **Numbered
+Todoist destination picker** from Step 1 (never default to Inbox). Defer the
+actual write to the batched-writes step (Step 10). Every
+`#next_action`-tagged vault task
 pushed to Todoist **must** carry the `Next_Actions✅` label — see Step 10
 for the three-step write pattern (add → move → label).
 
@@ -841,8 +911,9 @@ choices vary item-by-item:
 
 Three destinations:
 
-- **Todoist** — Paul names the destination project (per `config.md` §
-  Todoist: never Inbox; never default; the choice depends on work area).
+- **Todoist** — use the **Numbered Todoist destination picker** from Step 1
+  (per `config.md` § Todoist: never Inbox; never default; the choice depends
+  on work area). Paul may choose by displayed number or exact project name.
   Every task promoted from a vault `#next_action` tag **must** carry the
   `Next_Actions✅` label (Todoist label id: `2152094658`). Defer all
   Todoist writes to Step 10 batched writes; the three-step pattern
