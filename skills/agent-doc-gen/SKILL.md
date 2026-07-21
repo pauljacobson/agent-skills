@@ -79,6 +79,19 @@ This skill owns **location and filename only**. The **body** of each document mu
 
 If a governing skill exists for the document type, invoke or follow it for the content, then apply this skill's filing rules to save the result. If none applies, write clear, well-structured Markdown.
 
+### Reports also get an HTML slide deck
+
+Reports are easier for the user to read as a slide deck, so **every report is delivered in both formats**: the Markdown file (governed as above) and an HTML slide-deck version built from the *same content*. The HTML deck is a presentation of the report, not a different report — do not add or drop material between the two.
+
+Requirements for the `.html` deck:
+
+- **Self-contained, single file.** All CSS and JS inline; no CDN or external assets, so it opens offline by double-clicking.
+- **One slide per section.** Map the report's top-level headings (and major sub-sections where a slide would otherwise overflow) to individual slides. First slide is a title slide (report title + date).
+- **Navigation.** Arrow keys / space / click to advance; slides sized to the viewport. A simple scroll-snap or one-slide-at-a-time layout is fine — keep the mechanism minimal.
+- **Readable.** Large type, generous spacing, high contrast, sensible defaults for light and dark. Long tables/code stay legible (shrink or split across slides rather than overflowing).
+
+Keep the deck minimal — the goal is a clear read of the report, not a design showcase.
+
 ### 5. Report where you saved each file
 
 After writing, tell the user the path(s) of every file created, e.g.:
