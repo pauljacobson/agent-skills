@@ -53,11 +53,14 @@ YYYYMMDD Title of the document.md
 - `YYYYMMDD` — ISO date at the time of generation.
 - Title — concise and subject-based, describing what the document is.
 
+For **reports**, the HTML slide-deck companion uses the identical base name with a `.html` extension.
+
 Examples inside `blkbrd.film/`:
 
 ```
 blkbrd.film/
   20260708 Migration status report.md
+  20260708 Migration status report.html
   20260708 Reply re broken checkout.md
   20260708 Zendesk note - DNS handoff.md
 ```
