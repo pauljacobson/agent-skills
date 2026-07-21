@@ -1,6 +1,6 @@
 ---
 name: agent-doc-gen
-description: Use whenever you are about to produce a written deliverable — a report, a draft reply to a user or customer, an internal note, a P2 post, an issue write-up, or any similar document. Triggers on phrasings like "write a report", "draft a reply", "write up an internal note", "document this", "create a note", "draft a response", or any request that results in a saved document. Files each document as its own Markdown file in a per-site subdirectory of the working directory, and enforces that the document's content follows whatever more specific skill or instruction governs that document type.
+description: Use whenever you are about to produce a written deliverable — a report, a draft reply to a user or customer, an internal note, a P2 post, an issue write-up, or any similar document. Triggers on phrasings like "write a report", "draft a reply", "write up an internal note", "document this", "create a note", "draft a response", or any request that results in a saved document. Files each document as its own Markdown file in a per-site subdirectory of the working directory (reports additionally get an HTML slide-deck companion), and enforces that the document's content follows whatever more specific skill or instruction governs that document type.
 ---
 
 # Agent Document Generation & Filing
