@@ -72,7 +72,7 @@ This skill owns **location and filename only**. The **body** of each document mu
 | Document type | Content governed by |
 |---|---|
 | Zendesk internal note | [[zendesk-internal-note]] skill — use its exact template (📌 previous note / 📐 Progress / ✅ Next steps) |
-| Report | The user's CLAUDE.md report format (level-3 top heading, proceeding down from there) |
+| Report | The user's CLAUDE.md report format (level-3 top heading, proceeding down from there) — **plus** an HTML slide-deck companion (see [below](#reports-also-get-an-html-slide-deck)) |
 | Issue / bug write-up | `write-effective-issues` skill |
 | Support outputs (P2 post, working note, Linear issue) | `support-review` skill templates |
 | Anything else | The most relevant skill or agent instruction for that document type |
