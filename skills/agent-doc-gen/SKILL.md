@@ -40,6 +40,7 @@ Do not guess silently and do not fall back to a default folder — ask.
 
 - Create the subdirectory `./<site>/` (relative to the current working directory) if it does not already exist, then write the document there.
 - **One file per document.** If a task produces several deliverables (e.g. a report *and* a draft reply), write each as its own file in the same site folder.
+- **Reports get two files.** For any document of type *report*, always produce **both** a Markdown file **and** an HTML slide-deck companion with the same base name (see [Reports also get an HTML slide deck](#reports-also-get-an-html-slide-deck)). This applies wherever the report is saved — site folder or working-directory root.
 
 ### 3. Name each file
 
