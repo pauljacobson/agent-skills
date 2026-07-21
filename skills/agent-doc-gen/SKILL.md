@@ -107,6 +107,6 @@ The user's global CLAUDE.md says reports go in the **root** of the working direc
 
 ## Out of scope
 
-- Inventing document content formats of its own — content always defers to the governing skill.
+- Inventing document content formats of its own — content always defers to the governing skill. (The one exception is the report HTML slide deck, which is a *presentation* of the governed report content, not a new format for it.)
 - Reorganising, renaming, or moving pre-existing files.
 - Firing when no written deliverable is being produced.
