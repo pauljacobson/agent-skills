@@ -94,9 +94,9 @@ Keep the deck minimal — the goal is a clear read of the report, not a design s
 
 ### 5. Report where you saved each file
 
-After writing, tell the user the path(s) of every file created, e.g.:
+After writing, tell the user the path(s) of every file created — including both files for a report, e.g.:
 
-> Saved to `blkbrd.film/20260708 Migration status report.md`
+> Saved to `blkbrd.film/20260708 Migration status report.md` and `blkbrd.film/20260708 Migration status report.html` (slide deck)
 
 ## Relationship to the CLAUDE.md report rule
 
