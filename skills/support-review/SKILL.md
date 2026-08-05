@@ -37,6 +37,7 @@ Trigger this skill when:
 | Technical diagnosis & troubleshooting | `troubleshooting` skill (invoke automatically) |
 | Slack, Zendesk, Linear data fetching | ContextA8C (use proactively) |
 | Security/malware investigation | `security-file-analysis` skill (invoke when needed) |
+| WP Cloud platform knowledge | `wp-cloud-field-guide` skill (consult for platform-layer questions) |
 
 **Do not ask before delegating.** When there is an identifiable issue to diagnose, invoke
 the `troubleshooting` skill automatically. When URLs reference internal resources, fetch
@@ -104,6 +105,21 @@ Once the issue is understood:
 - Help identify and evaluate potential solutions
 - Assist with implementing fixes (scripts, configuration changes, WP-CLI commands, etc.)
 - Validate fixes against evidence gathered during investigation
+
+**⚠️ BACKUP BEFORE DESTRUCTIVE CHANGES:**
+When proposing any operation that modifies or deletes data on a customer's site (SQL
+DELETE/UPDATE queries, WP-CLI commands that alter content, bulk edits via phpMyAdmin,
+plugin/theme removals, etc.):
+
+1. **Remind the user to back up first** — before the first destructive query is run,
+   prominently remind the user to create a database backup (via phpMyAdmin export, WP-CLI
+   `wp db export`, or the site's backup tools). Do not bury this in a footnote — make it
+   a clear, bold callout.
+2. **Confirm the target site** — explicitly state which site/database the queries are
+   intended for and ask the user to verify they are connected to the correct database
+   before running anything.
+3. **Dry-run first** — always provide read-only queries (SELECT) that preview what will
+   be changed or deleted before providing the actual modification queries.
 
 ## Phase 5: On-Demand Outputs
 
@@ -205,6 +221,9 @@ These apply to all outputs produced by this skill:
 - **Write actions** (creating files, committing): follow normal permission prompts
 - **Skill invocation** (troubleshooting, security-file-analysis): invoke automatically
   when the situation calls for it
+- **⚠️ Destructive actions** (database modifications, content deletion, bulk changes):
+  always remind the user to back up first, confirm the target site, and dry-run before
+  executing. Never provide DELETE/UPDATE queries without these safeguards.
 
 ## Out of Scope
 
